@@ -8,7 +8,14 @@ import Login from './screens/Login';
 import Signup from './screens/Signup';
 import Chat from './screens/Chat';
 import Home from './screens/Home';
+import Profile from './screens/Profile';
+import Stats from './screens/Stats';
+import Bookmark from './screens/Bookmark';
+import Notification from './screens/Notification';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import  MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
 
+const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
 const AuthenticatedUserContext = createContext({});
 
@@ -23,10 +30,43 @@ return (
 
 function ChatStack() {
   return (
-    <Stack.Navigator defaultScreenOptions={Home}>
-      <Stack.Screen name='Home' component={Home} />
-      <Stack.Screen name='Chat' component={Chat} />
-    </Stack.Navigator>
+    // <Stack.Navigator defaultScreenOptions={Home}>
+    //   <Stack.Screen name='Home' component={Home} />
+    //   <Stack.Screen name='Chat' component={Chat} />
+    // </Stack.Navigator>
+    <Tab.Navigator labeled={false} barStyle={{ backgroundColor: 'black' }} activeColor="white" >
+      <Tab.Screen name="Home" component={Home}            //Home Screen
+      options={{
+        tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="home" color={color} size={26}/>
+        ),
+    }}/>
+    
+      <Tab.Screen name="Notification" component={Notification}      // Notification Screen
+      options={{
+        tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="calendar-text" color={color} size={26}/>
+        ),
+    }}/>
+    <Tab.Screen name="Bookmark" component={Bookmark}      // Notification Screen
+      options={{
+        tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="bookmark" color={color} size={26}/>
+        ),
+    }}/>
+      <Tab.Screen name="Stats" component={Stats}        // Search Screen
+      options={{
+        tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="chart-box-outline" color={color} size={26}/>
+        ),
+    }}/>
+      <Tab.Screen name="Profile" component={Profile}            // Profile Screen
+      options={{
+        tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="account-circle" color={color} size={26}/>
+        ),
+    }}/>
+    </Tab.Navigator>
   );
 }
 
