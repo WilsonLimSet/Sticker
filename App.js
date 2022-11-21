@@ -13,12 +13,15 @@ import Home from './screens/Home';
 import Profile from './screens/Profile';
 import Stats from './screens/Stats';
 import Bookmark from './screens/Bookmark';
+import challengeScreen1 from './screens/challengeScreen1';
+import challengeScreen2 from './screens/challengeScreen2';
 import Notification from './screens/Notification';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import  MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
+const challengeStack = createStackNavigator();
 const AuthenticatedUserContext = createContext({});
 
 const AuthenticatedUserProvider = ({ children }) => {
@@ -30,14 +33,14 @@ return (
   );
 };
 
-function ChatStack() {
+function HomeStack() {
   return (
     // <Stack.Navigator defaultScreenOptions={Home}>
     //   <Stack.Screen name='Home' component={Home} />
     //   <Stack.Screen name='Chat' component={Chat} />
     // </Stack.Navigator>
     <Tab.Navigator labeled={false} barStyle={{ backgroundColor: 'black' }} activeColor="white" >
-      <Tab.Screen name="Home" component={Home}            //Home Screen
+      <Tab.Screen name="Home" component={ChatStack}            //Home Screen
       options={{
         tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="home" color={color} size={26}/>
@@ -50,7 +53,7 @@ function ChatStack() {
             <MaterialCommunityIcons name="calendar-text" color={color} size={26}/>
         ),
     }}/>
-    <Tab.Screen name="Bookmark" component={Bookmark}      // Notification Screen
+    <Tab.Screen name="Bookmark" component={ChallengeScreens}      // Notification Screen
       options={{
         tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="bookmark" color={color} size={26}/>
@@ -71,6 +74,27 @@ function ChatStack() {
     </Tab.Navigator>
   );
 }
+
+
+function ChatStack() {
+  return (
+     <Stack.Navigator defaultScreenOptions={Home}>
+       <Stack.Screen name='Home' component={Home} />
+       <Stack.Screen name='Chat' component={Chat} />
+     </Stack.Navigator>
+  );
+}
+
+function ChallengeScreens(){
+  return (
+    <challengeStack.Navigator screenOptions={{ headerShown: false }}>
+      <challengeStack.Screen name='Create Challenges' component={challengeScreen1} />
+      <challengeStack.Screen name='View Challenges' component={challengeScreen2} />
+    </challengeStack.Navigator>
+  );
+}
+
+
 
 function AuthStack() {
   return (
@@ -106,7 +130,7 @@ if (isLoading) {
 
 return (
     <NavigationContainer>
-      {user ? <ChatStack /> : <AuthStack />}
+      {user ? <HomeStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }
