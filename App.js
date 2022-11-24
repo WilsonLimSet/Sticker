@@ -16,6 +16,7 @@ import Bookmark from './screens/Bookmark';
 import challengeScreen1 from './screens/challengeScreen1';
 import challengeScreen2 from './screens/challengeScreen2';
 import Notification from './screens/Notification';
+import EditProfile from './screens/EditProfile';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import  MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -39,7 +40,7 @@ function HomeStack() {
     //   <Stack.Screen name='Home' component={Home} />
     //   <Stack.Screen name='Chat' component={Chat} />
     // </Stack.Navigator>
-    <Tab.Navigator labeled={false} barStyle={{ backgroundColor: 'black' }} activeColor="white" >
+    <Tab.Navigator labeled={false} barStyle={{ backgroundColor: 'black' }} activeColor="white" screenOptions={{ headerShown: true }}>
       <Tab.Screen name="Home" component={ChatStack}            //Home Screen
       options={{
         tabBarIcon: ({ color, size }) => (
@@ -65,7 +66,7 @@ function HomeStack() {
             <MaterialCommunityIcons name="chart-box-outline" color={color} size={26}/>
         ),
     }}/>
-      <Tab.Screen name="Profile" component={Profile}            // Profile Screen
+      <Tab.Screen name="Profile" component={ProfileStack}            // Profile Screen
       options={{
         tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account-circle" color={color} size={26}/>
@@ -81,6 +82,15 @@ function ChatStack() {
      <Stack.Navigator defaultScreenOptions={Home}>
        <Stack.Screen name='Home' component={Home} />
        <Stack.Screen name='Chat' component={Chat} />
+     </Stack.Navigator>
+  );
+}
+
+function ProfileStack() {
+  return (
+     <Stack.Navigator defaultScreenOptions={Profile}>
+       <Stack.Screen name='Profile' component={Profile} />
+       <Stack.Screen name='EditProfile' component={EditProfile} />
      </Stack.Navigator>
   );
 }

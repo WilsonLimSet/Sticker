@@ -20,9 +20,6 @@ export default function Profile() {
       <TouchableOpacity style={styles.button} onPress={onSignOut}>
         <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 18}}> Log Out</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button}  onPress={() => navigation.navigate("EditProfile")}>
-        <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 18}}> Edit Profile</Text>
-      </TouchableOpacity>
       </SafeAreaView>
       <StatusBar barStyle="light-content" />
     </View>
