@@ -19,6 +19,11 @@ export default function EditProfile() {
   return (
     <View style={styles.container}>
       <Image source={backImage} style={styles.backImage} />
+      <Image source={backImage} style={styles.backImage} />
+      <Image
+          style={styles.userImg}
+          source={{uri: userData ? userData.userImg || 'https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg' : 'https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg'}}
+        />
       <View style={styles.whiteSheet} />
       <SafeAreaView style={styles.form}>
       <TouchableOpacity style={styles.button} >
