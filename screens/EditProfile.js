@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { StyleSheet, Text, View, Button, TextInput, Image, SafeAreaView, TouchableOpacity, StatusBar, Alert } from "react-native";
 import { auth, upload,useAuth } from "../config/firebase";
 import { signOut } from 'firebase/auth';
@@ -8,31 +8,11 @@ import { useEffect} from "react";
 const backImage = require("../assets/backImage.jpg");
 
 export default function EditProfile() {
- const currentUser = useAuth();
   const [photo, setPhoto] = useState(null);
   const [loading, setLoading] = useState(false);
   const [photoURL, setPhotoURL] = useState("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png");
  
   const navigation = useNavigation();
-  const onSignOut = () => {
-    signOut(auth).catch(error => console.log('Error logging out: ', error));
-  };
-   const handleUpdate = async() => {
-    let imgUrl = await uploadImage();
-
-    if( imgUrl == null && userData.userImg ) {
-      imgUrl = userData.userImg;
-    }
-    }
-  function handleClick() {
-    upload(photo, currentUser, setLoading);
-  }
-
-  useEffect(() => {
-    if (currentUser?.photoURL) {
-      setPhotoURL(currentUser.photoURL);
-    }
-  }, [currentUser])
 
 
   
@@ -41,10 +21,10 @@ export default function EditProfile() {
       <Image source={backImage} style={styles.backImage} />
       <View style={styles.whiteSheet} />
       <SafeAreaView style={styles.form}>
-      <TouchableOpacity style={styles.button} onPress={handleUpdate}>
+      <TouchableOpacity style={styles.button} >
         <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 18}}> Choose pic </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleClick}>
+      <TouchableOpacity style={styles.button} >
         <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 19}}> Save Changes</Text>
       </TouchableOpacity>
       </SafeAreaView>

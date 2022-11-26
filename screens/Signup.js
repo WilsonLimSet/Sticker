@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { collection, doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, getDocs, where, query } from "firebase/firestore"; 
+import { collection, doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, getDocs, where, query, Firestore,  } from "firebase/firestore"; 
 import { StyleSheet, Text, View, Button, TextInput, Image, SafeAreaView, TouchableOpacity, StatusBar, Alert } from "react-native";
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword,updateProfile } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import {database} from '../config/firebase';
 import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
@@ -15,7 +15,17 @@ export default function Signup({ navigation }) {
 
   const onHandleSignup = async () => {
     const { user } = await createUserWithEmailAndPassword(auth, email, password)
-    await setDoc(doc(database, "user", user.uid), { name:email.split('@')[0].split('.')[0] ,email: user.email}) 
+    await updateProfile(user,{
+      displayName:email.split('@')[0].split('.')[0] ,
+      photoURL: 'https://my-cdn.com/assets/user/123.png',
+    });
+    await setDoc(doc(database, "users", user.uid), 
+    { displayName:email.split('@')[0].split('.')[0] 
+    ,email: user.email
+    ,photoURL: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"}) 
+    await user.reload();
+    // await user?.updateDisplayName("Jane Q. User");
+    // await user?.updatePhotoURL("https://example.com/jane-q-user/profile.jpg");
     console.log('Document Added') 
   }     
 
