@@ -13,17 +13,12 @@ import Home from './screens/Home';
 import Profile from './screens/Profile';
 import Stats from './screens/Stats';
 import Bookmark from './screens/Bookmark';
-import challengeScreen1 from './screens/challengeScreen1';
+import ExploreChallenges from './screens/ExploreChallenges';
 import challengeScreen2 from './screens/challengeScreen2';
 import Notification from './screens/Notification';
 import EditProfile from './screens/EditProfile';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import  MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { fab } from '@fortawesome/free-brands-svg-icons';
-import { faCircleChevronDown } from '@fortawesome/free-solid-svg-icons/faCircleChevronDown';
-
-library.add(fab, faCircleChevronDown)
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -103,7 +98,7 @@ function ProfileStack() {
 function ChallengeScreens(){
   return (
     <challengeStack.Navigator screenOptions={{ headerShown: false }}>
-      <challengeStack.Screen name='Create Challenges' component={challengeScreen1} />
+      <challengeStack.Screen name='Create Challenges' component={ExploreChallenges} />
       <challengeStack.Screen name='View Challenges' component={challengeScreen2} />
     </challengeStack.Navigator>
   );
