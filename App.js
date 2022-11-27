@@ -19,6 +19,11 @@ import Notification from './screens/Notification';
 import EditProfile from './screens/EditProfile';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import  MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fab } from '@fortawesome/free-brands-svg-icons';
+import { faCircleChevronDown } from '@fortawesome/free-solid-svg-icons/faCircleChevronDown';
+
+library.add(fab, faCircleChevronDown)
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -36,18 +41,13 @@ return (
 
 function HomeStack() {
   return (
-    // <Stack.Navigator defaultScreenOptions={Home}>
-    //   <Stack.Screen name='Home' component={Home} />
-    //   <Stack.Screen name='Chat' component={Chat} />
-    // </Stack.Navigator>
-    <Tab.Navigator labeled={false} barStyle={{ backgroundColor: 'black' }} activeColor="white" screenOptions={{ headerShown: true }}>
+    <Tab.Navigator labeled={false} barStyle={{ backgroundColor: colors.tabBar, position: 'absolute', overflow: 'hidden', borderTopLeftRadius: 30, borderTopRightRadius: 30}} activeColor={colors.darkGray} screenOptions={{ headerShown: true }}>
       <Tab.Screen name="Home" component={ChatStack}            //Home Screen
       options={{
         tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="home" color={color} size={26}/>
         ),
     }}/>
-    
       <Tab.Screen name="Notification" component={Notification}      // Notification Screen
       options={{
         tabBarIcon: ({ color, size }) => (

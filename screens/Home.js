@@ -12,8 +12,22 @@ const Home = () => {
 
     useEffect(() => {
         navigation.setOptions({
+            title: "Dashboard",
+            headerTitleStyle: {
+                fontSize: 30,
+            },
+            headerTitleAlign:'left',
+            headerTintColor: "white",
+            headerStyle: {
+                backgroundColor: colors.darkGray,
+                // fontSize: 1000,
+                shadowRadius: 0,
+                shadowOffset: {
+                    height: 0,
+                },
+            },
             headerLeft: () => (
-                <FontAwesome name="search" size={24} color={colors.gray} style={{marginLeft: 15}}/>
+                <FontAwesome name="bars" size={24} color="white" style={{marginLeft: 15}}/>
             ),
             headerRight: () => (
                 <Image
@@ -135,12 +149,12 @@ const Home = () => {
             paddingLeft: 13,
             marginBottom: 5,
             fontSize: 20,
-            fontWeight: "600",
+            fontWeight: "500",
         },
         subtitle: {
             paddingRight: 10,
             fontSize: 16,
-            fontWeight: "600",
+            fontWeight: "400",
         },
         profileBar: {
             backgroundColor: "#A2C4D2",
