@@ -4,5 +4,5 @@ export default {
     mediumGray: '#F6F7FB',
     lightGray: '#EAEAEA',
     darkGray: "#343434",
-
+    tabBar: "#E9E9E9",
 };
