@@ -56,13 +56,13 @@ function HomeStack() {
       <Tab.Screen name="Notification" component={Notification}      // Notification Screen
       options={{
         tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="calendar-text" color={color} size={26}/>
+            <MaterialCommunityIcons name="magnify" color={color} size={26}/>
         ),
     }}/>
     <Tab.Screen name="Bookmark" component={ChallengeScreens}      // Notification Screen
       options={{
         tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="bookmark" color={color} size={26}/>
+            <MaterialCommunityIcons name="plus-circle" color={color} size={26}/>
         ),
     }}/>
       <Tab.Screen name="Stats" component={Stats}        // Search Screen
