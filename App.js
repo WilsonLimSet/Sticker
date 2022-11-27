@@ -19,6 +19,11 @@ import Notification from './screens/Notification';
 import EditProfile from './screens/EditProfile';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import  MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fab } from '@fortawesome/free-brands-svg-icons';
+import { faCircleChevronDown } from '@fortawesome/free-solid-svg-icons/faCircleChevronDown';
+
+library.add(fab, faCircleChevronDown)
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();

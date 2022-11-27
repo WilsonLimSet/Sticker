@@ -1,6 +1,8 @@
 export default {
-    primary: '#B8DCEA',
+    primary: '#B7DBEA',
     gray: '#C5C5C7',
     mediumGray: '#F6F7FB',
-    lightGray: '#FAFAFA'
+    lightGray: '#EAEAEA',
+    darkGray: "#343434",
+
 };

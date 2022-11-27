@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { View, TouchableOpacity, Text, Image, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import colors from '../colors';
-import { Entypo } from '@expo/vector-icons';
 const catImageUrl = "https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=49ed3252c0b2ffb49cf8b508892e452d";
 
 const Home = () => {
@@ -30,12 +30,64 @@ const Home = () => {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity
+            <View style={styles.row}>
+                <View style={styles.column}>
+                    <View style={styles.toggle}>
+                        <Text style={styles.subtitle}>Show active Challenges</Text>
+                        <FontAwesomeIcon icon="circle-chevron-down" size="23x" color={colors.darkGray}/>
+                    </View>
+                    <View style={styles.entry}>
+                        <View style={styles.footer}>
+                            <Text style={styles.title}>
+                                Cycling1
+                            </Text>
+                            <View style={styles.profileBar}>
+                                {/* circle profile bar */}
+                            </View>
+                        </View>
+                    </View>
+                    <View style={styles.entry}>
+                        <View style={styles.footer}>
+                            <Text style={styles.title}>
+                                Cycling1
+                            </Text>
+                            <View style={styles.profileBar}>
+                                {/* circle profile bar */}
+                            </View>
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.column}>
+                    <View style={styles.entry}>
+                        <View style={styles.footer}>
+                            <Text style={styles.title}>
+                                Cycling1
+                            </Text>
+                            <View style={styles.profileBar}>
+                                {/* circle profile bar */}
+                            </View>
+                        </View>
+                    </View>
+                    <View style={styles.entry}>
+                        <View style={styles.footer}>
+                            <Text style={styles.title}>
+                                Cycling1
+                            </Text>
+                            <View style={styles.profileBar}>
+                                {/* circle profile bar */}
+                            </View>
+                        </View>
+                    </View>
+                    
+                </View>
+            </View>
+            
+            {/* <TouchableOpacity
                 onPress={() => navigation.navigate("Chat")}
                 style={styles.chatButton}
             >
                 <Entypo name="chat" size={24} color={colors.lightGray} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     );
     };
@@ -45,9 +97,57 @@ const Home = () => {
     const styles = StyleSheet.create({
         container: {
             flex: 1,
-            justifyContent: 'flex-end',
-            alignItems: 'flex-end',
-            backgroundColor: "#fff",
+            backgroundColor: colors.darkGray,
+            padding: 10,
+            // paddingTop: 40,
+            // boxSizing: "border-box"
+        },
+        row: {
+            display: "flex",
+            flexDirection: "row-reverse",
+            justifyContent: "center",
+        },
+        column: {
+            flex: "0%",
+        },
+        toggle: {
+            backgroundColor: colors.lightGray,
+            height: 71,
+            borderRadius: 14,
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 162,
+            flexDirection: "row",
+            margin: 10,
+        },
+        entry: {
+            backgroundColor: colors.primary,
+            width: 162,
+            height: 235,
+            borderRadius: 25,
+            margin: 10,
+        },
+        footer: {
+            flex: 1,
+            justifyContent: "flex-end",
+        },
+        title: {
+            paddingLeft: 13,
+            marginBottom: 5,
+            fontSize: 20,
+            fontWeight: "600",
+        },
+        subtitle: {
+            paddingRight: 10,
+            fontSize: 16,
+            fontWeight: "600",
+        },
+        profileBar: {
+            backgroundColor: "#A2C4D2",
+            height: 42,
+            borderBottomRightRadius: 25,
+            borderBottomLeftRadius: 25,
+            overflow: "hidden",
         },
         chatButton: {
             backgroundColor: colors.primary,
