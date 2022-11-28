@@ -2,6 +2,9 @@ import { initializeApp } from 'firebase/app';
 import { getAuth,onAuthStateChanged } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import Constants from 'expo-constants';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
 import { useEffect, useState } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 

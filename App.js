@@ -7,6 +7,8 @@ import { auth } from './config/firebase';
 import {Camera,CameraType} from 'expo-camera';
 import * as MedicaLibrary from 'expo-media-library';
 import Login from './screens/Login';
+import Test from './screens/Test';
+import Add from './screens/Add';
 import Signup from './screens/Signup';
 import Chat from './screens/Chat';
 import Home from './screens/Home';
@@ -23,7 +25,6 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { faCircleChevronDown } from '@fortawesome/free-solid-svg-icons/faCircleChevronDown';
 import colors from './colors';
-
 library.add(fab, faCircleChevronDown)
 
 const Tab = createMaterialBottomTabNavigator();
@@ -49,7 +50,7 @@ function HomeStack() {
             <MaterialCommunityIcons name="home" color={color} size={26}/>
         ),
     }}/>
-      <Tab.Screen name="Notification" component={Notification}      // Notification Screen
+      <Tab.Screen name="Notification" component={Test}      // Notification Screen
       options={{
         tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="magnify" color={color} size={26}/>
@@ -61,7 +62,7 @@ function HomeStack() {
             <MaterialCommunityIcons name="plus-circle" color={color} size={26}/>
         ),
     }}/>
-      <Tab.Screen name="Stats" component={Stats}        // Search Screen
+      <Tab.Screen name="Stats" component={AddStack}        // Search Screen
       options={{
         tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="chart-box-outline" color={color} size={26}/>
@@ -87,6 +88,15 @@ function ChatStack() {
   );
 }
 
+function AddStack() {
+  return (
+     <Stack.Navigator defaultScreenOptions={Test}>
+       <Stack.Screen name='Add' component={Add} />
+       <Stack.Screen name='Test' component={Test} />
+     </Stack.Navigator>
+  );
+}
+
 function ProfileStack() {
   return (
      <Stack.Navigator defaultScreenOptions={Profile}>
@@ -99,8 +109,8 @@ function ProfileStack() {
 function ChallengeScreens(){
   return (
     <challengeStack.Navigator screenOptions={{ headerShown: false }}>
-      <challengeStack.Screen name='Create Challenges' component={ChallengeScreen1} />
-      <challengeStack.Screen name='View Challenges' component={ChallengeScreen2} />
+      <challengeStack.Screen name='Create Challenges' component={challengeScreen1} />
+      <challengeStack.Screen name='View Challenges' component={challengeScreen2} />
     </challengeStack.Navigator>
   );
 }
