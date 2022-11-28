@@ -56,7 +56,7 @@ export default function ChallengeScreen1({ navigation }) {
     }, []);
 
     const copyToClipboard = () => {
-      Clipboard.setString('https://join.sticker.me/89L8d5fhj4')
+      Clipboard.setStringAsync('https://join.sticker.me/89L8d5fhj4')
     }
 
     return (
@@ -172,16 +172,16 @@ export default function ChallengeScreen1({ navigation }) {
                   </View>
                 </View>
               </View>
+              <TouchableOpacity
+                style={styles.beginChallengeButton}
+                onPress={() => navigation.navigate('Home')}
+                underlayColor='#fff'>
+                <Text style={styles.beginChallengeText}>Begin Challenge</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
         
-        <TouchableOpacity
-          style={styles.beginChallengeButton}
-          onPress={() => navigation.navigate('Home')}
-          underlayColor='#fff'>
-          <Text style={styles.beginChallengeText}>Begin Challenge</Text>
-        </TouchableOpacity>
 
       </View>
     );

@@ -3,7 +3,7 @@ import * as RN from 'react-native';
 import { collection, addDoc } from 'firebase/firestore';
 import {database} from '../config/firebase';
 import { useNavigation } from '@react-navigation/native';
-import EmojiPicker from 'rn-emoji-keyboard';
+// import EmojiPicker from 'rn-emoji-keyboard';
 
 export default function Add() {
     const navigation = useNavigation();
