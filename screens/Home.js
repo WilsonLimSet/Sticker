@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { View, TouchableOpacity, Text, Image, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, TouchableOpacity, Text, Image, StyleSheet, Switch } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -9,6 +9,9 @@ const catImageUrl = "https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84
 const Home = () => {
 
     const navigation = useNavigation();
+
+    const [isEnabled, setIsEnabled] = useState(true);
+    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
     useEffect(() => {
         navigation.setOptions({
@@ -20,7 +23,6 @@ const Home = () => {
             headerTintColor: "white",
             headerStyle: {
                 backgroundColor: colors.darkGray,
-                // fontSize: 1000,
                 shadowRadius: 0,
                 shadowOffset: {
                     height: 0,
@@ -48,7 +50,13 @@ const Home = () => {
                 <View style={styles.column}>
                     <View style={styles.toggle}>
                         <Text style={styles.subtitle}>Show active Challenges</Text>
-                        <FontAwesomeIcon icon="circle-chevron-down" size="23x" color={colors.darkGray}/>
+                        <Switch
+                            trackColor={{ false: colors.darkGray, true: "#70A1B7" }}
+                            thumbColor={"#f4f3f4"}
+                            ios_backgroundColor="#3e3e3e"
+                            onValueChange={toggleSwitch}
+                            value={isEnabled}
+                        />
                     </View>
                     <TouchableOpacity onPress={() => navigation.navigate('View Challenge')}>
                         <View style={styles.entry}>
@@ -94,13 +102,6 @@ const Home = () => {
                     </TouchableOpacity>
                 </View>
             </View>
-            
-            {/* <TouchableOpacity
-                onPress={() => navigation.navigate("Chat")}
-                style={styles.chatButton}
-            >
-                <Entypo name="chat" size={24} color={colors.lightGray} />
-            </TouchableOpacity> */}
         </View>
     );
     };
@@ -132,6 +133,8 @@ const Home = () => {
             width: 162,
             flexDirection: "row",
             margin: 10,
+            paddingLeft: 5,
+            paddingRight: 5,
         },
         entry: {
             backgroundColor: colors.primary,
@@ -151,7 +154,7 @@ const Home = () => {
             fontWeight: "400",
         },
         subtitle: {
-            paddingRight: 10,
+            paddingRight: 5,
             fontSize: 16,
             fontWeight: "400",
         },
@@ -162,21 +165,4 @@ const Home = () => {
             borderBottomLeftRadius: 25,
             overflow: "hidden",
         },
-        chatButton: {
-            backgroundColor: colors.primary,
-            height: 50,
-            width: 50,
-            borderRadius: 25,
-            alignItems: 'center',
-            justifyContent: 'center',
-            shadowColor: colors.primary,
-            shadowOffset: {
-                width: 0,
-                height: 2,
-            },
-            shadowOpacity: .9,
-            shadowRadius: 8,
-            marginRight: 20,
-            marginBottom: 50,
-        }
     });
