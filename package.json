@@ -10,6 +10,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo-google-fonts/dev": "^0.2.2",
     "@expo/webpack-config": "^0.17.2",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-brands-svg-icons": "^6.2.1",
@@ -22,8 +23,10 @@
     "@react-navigation/stack": "^6.0.11",
     "dotenv": "^11.0.0",
     "expo": "^47.0.6",
+    "expo-app-loading": "~2.1.1",
     "expo-camera": "~13.1.0",
     "expo-constants": "~14.0.2",
+    "expo-font": "~11.0.1",
     "expo-media-library": "~15.0.0",
     "expo-status-bar": "~1.4.2",
     "firebase": "^9.9.3",
@@ -36,7 +39,8 @@
     "react-native-safe-area-context": "4.4.1",
     "react-native-screens": "~3.18.0",
     "react-native-svg": "^13.6.0",
-    "react-native-web": "~0.18.9"
+    "react-native-web": "~0.18.9",
+    "rn-emoji-keyboard": "^1.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
