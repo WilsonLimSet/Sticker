@@ -109,8 +109,8 @@ function ProfileStack() {
 function ChallengeScreens(){
   return (
     <challengeStack.Navigator screenOptions={{ headerShown: false }}>
-      <challengeStack.Screen name='Create Challenges' component={challengeScreen1} />
-      <challengeStack.Screen name='View Challenges' component={challengeScreen2} />
+      <challengeStack.Screen name='Create Challenges' component={ChallengeScreen1} />
+      <challengeStack.Screen name='View Challenges' component={ChallengeScreen2} />
     </challengeStack.Navigator>
   );
 }
