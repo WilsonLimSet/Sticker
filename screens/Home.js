@@ -149,7 +149,7 @@ const Home = () => {
             paddingLeft: 13,
             marginBottom: 5,
             fontSize: 20,
-            fontWeight: "500",
+            fontWeight: "400",
         },
         subtitle: {
             paddingRight: 10,
