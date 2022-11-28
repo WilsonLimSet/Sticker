@@ -32,7 +32,7 @@ export default function Product({
                     <AntDesign onPress={onDelete} name="delete" size={24} color="black" />
                 </RN.View>
                 <RN.Text style={styles.name}>{name}</RN.Text>
-                <RN.Text style={styles.price}>${price}</RN.Text>
+                <RN.Text style={styles.price}>{price}Days</RN.Text>
                 {isSold ? (
                     <RN.TouchableOpacity 
                     style={[styles.button, {backgroundColor: 'gray'}]}>
