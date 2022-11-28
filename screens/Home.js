@@ -50,49 +50,48 @@ const Home = () => {
                         <Text style={styles.subtitle}>Show active Challenges</Text>
                         <FontAwesomeIcon icon="circle-chevron-down" size="23x" color={colors.darkGray}/>
                     </View>
-                    <View style={styles.entry}>
-                        <View style={styles.footer}>
-                            <Text style={styles.title}>
-                                Cycling1
-                            </Text>
-                            <View style={styles.profileBar}>
-                                {/* circle profile bar */}
+                    <TouchableOpacity onPress={() => navigation.navigate('View Challenge')}>
+                        <View style={styles.entry}>
+                            <View style={styles.footer}>
+                                <Text style={styles.title}>Cycling</Text>
+                                <View style={styles.profileBar}>
+                                    {/* circle profile bar */}
+                                </View>
                             </View>
                         </View>
-                    </View>
-                    <View style={styles.entry}>
-                        <View style={styles.footer}>
-                            <Text style={styles.title}>
-                                Cycling1
-                            </Text>
-                            <View style={styles.profileBar}>
-                                {/* circle profile bar */}
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('View Challenge')}>
+                        <View style={styles.entry}>
+                            <View style={styles.footer}>
+                                <Text style={styles.title}>Walking</Text>
+                                <View style={styles.profileBar}>
+                                    {/* circle profile bar */}
+                                </View>
                             </View>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.column}>
-                    <View style={styles.entry}>
-                        <View style={styles.footer}>
-                            <Text style={styles.title}>
-                                Cycling1
-                            </Text>
-                            <View style={styles.profileBar}>
-                                {/* circle profile bar */}
+                    <TouchableOpacity onPress={() => navigation.navigate('View Challenge')}>
+                        <View style={styles.entry}>
+                            <View style={styles.footer}>
+                                    <Text style={styles.title}>Running</Text>
+                                <View style={styles.profileBar}>
+                                    {/* circle profile bar */}
+                                </View>
                             </View>
                         </View>
-                    </View>
-                    <View style={styles.entry}>
-                        <View style={styles.footer}>
-                            <Text style={styles.title}>
-                                Cycling1
-                            </Text>
-                            <View style={styles.profileBar}>
-                                {/* circle profile bar */}
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('View Challenge')}>
+                        <View style={styles.entry}>
+                            <View style={styles.footer}>
+                                <Text style={styles.title}>Drinking Water</Text>
+                                <View style={styles.profileBar}>
+                                    {/* circle profile bar */}
+                                </View>
                             </View>
                         </View>
-                    </View>
-                    
+                    </TouchableOpacity>
                 </View>
             </View>
             

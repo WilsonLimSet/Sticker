@@ -9,16 +9,17 @@ import  MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunit
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
-export default function ChallengeScreen1({ navigation }) {
+export default function CreateChallenge({ navigation }) {
     const [title, onChangeTitle] = useState(null);
     const [text, onChangeText] = useState(null);
     
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
     const [items, setItems] = useState([
-      {label: 'Spain', value: 'spain'},
-      {label: 'Italy', value: 'italy'},
-      {label: 'Finland', value: 'finland'}
+      {label: 'Minutes', value: 'minutes'},
+      {label: 'Days', value: 'days'},
+      {label: 'Miles', value: 'miles'},
+      {label: 'Pounds', value: 'pounds'},
     ]);
 
     const [openDuration, setDurationOpen] = useState(false);
@@ -101,7 +102,7 @@ export default function ChallengeScreen1({ navigation }) {
               setOpen={setOpen}
               setValue={setValue}
               setItems={setItems}
-              placeholder="Select an Option"
+              placeholder="Select Metric"
               placeholderStyle={{color: colors.placeholderGray}}
               onOpen={onMetricOpen}
             />
@@ -123,7 +124,7 @@ export default function ChallengeScreen1({ navigation }) {
                 setOpen={setDurationOpen}
                 setValue={setDurationValue}
                 setItems={setDurationItems}
-                placeholder="Select an Option"
+                placeholder="Select Number of Days"
                 placeholderStyle={{color: colors.placeholderGray}}
                 onOpen={onDurationOpen}
               />
@@ -149,8 +150,8 @@ export default function ChallengeScreen1({ navigation }) {
 
                 multiple={true}
                 mode="BADGE"
-                badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
-                placeholder="Select an Option"
+                badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#8ac926"]}
+                placeholder="Select Friends"
                 placeholderStyle={{color: colors.placeholderGray}}
               />
               </View>
@@ -186,7 +187,6 @@ export default function ChallengeScreen1({ navigation }) {
       </View>
     );
   }
-
 
 
   const styles = StyleSheet.create({

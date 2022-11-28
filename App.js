@@ -15,8 +15,9 @@ import Home from './screens/Home';
 import Profile from './screens/Profile';
 import Stats from './screens/Stats';
 import Bookmark from './screens/Bookmark';
-import ChallengeScreen1 from './screens/ChallengeScreen1';
+import CreateChallenge from './screens/CreateChallenge';
 import ChallengeScreen2 from './screens/ChallengeScreen2';
+import ViewChallenge from './screens/ViewChallenge';
 import Notification from './screens/Notification';
 import EditProfile from './screens/EditProfile';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -83,7 +84,7 @@ function ChatStack() {
   return (
      <Stack.Navigator defaultScreenOptions={Home}>
        <Stack.Screen name='Home' component={Home} />
-       {/* <Stack.Screen name='Chat' component={Chat} /> */}
+       <Stack.Screen name='View Challenge' component={ViewChallenge} />
      </Stack.Navigator>
   );
 }
@@ -109,8 +110,8 @@ function ProfileStack() {
 function ChallengeScreens(){
   return (
     <challengeStack.Navigator screenOptions={{ headerShown: false }}>
-      <challengeStack.Screen name='Create Challenges' component={challengeScreen1} />
-      <challengeStack.Screen name='View Challenges' component={challengeScreen2} />
+      <challengeStack.Screen name='Create Challenges' component={CreateChallenge} />
+      <challengeStack.Screen name='View Challenges' component={ChallengeScreen2} />
     </challengeStack.Navigator>
   );
 }
