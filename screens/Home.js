@@ -66,7 +66,6 @@ const Home = () => {
                 />
             ),
         });
-        
     }, [navigation]);
 
     return (

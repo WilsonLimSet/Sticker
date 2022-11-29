@@ -40,7 +40,7 @@ return (
 
 function HomeStack() {
   return (
-    <Tab.Navigator labeled={false} barStyle={{ backgroundColor: colors.tabBar, position: 'absolute', overflow: 'hidden', borderTopLeftRadius: 30, borderTopRightRadius: 30}} activeColor={colors.darkGray} screenOptions={{ headerShown: true }}>
+    <Tab.Navigator labeled={false} barStyle={{ backgroundColor: colors.tabBar, position: 'absolute', overflow: 'hidden', borderTopLeftRadius: 30, borderTopRightRadius: 30}} activeColor={"black"} screenOptions={{ headerShown: true }}>
       <Tab.Screen name="Home" component={ChallengeStack}            //Home Screen
       options={{
         tabBarIcon: ({ color, size }) => (
