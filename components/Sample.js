@@ -10,25 +10,11 @@ export default function Sample({
     days,
 }) {
 
-    const onDelete = () => {
-        const docRef = doc(firebase, 'exploreChallenges', id);
-        deleteDoc(docRef);
-    }
-
-    const onEdit = () => {
-        const docRef = doc(firebase, 'exploreChallenges', id);
-       
-    }
-
     return(
         <RN.View>
             <RN.View style={styles.productContainer}>
                 <RN.Text style={styles.name}>{name}</RN.Text>
-                <RN.Text style={styles.days}>{days}Days</RN.Text>
-              
-                
-            
-                
+                <RN.Text style={styles.days}>{days} days</RN.Text>
             </RN.View>
         </RN.View>
     )
@@ -46,7 +32,7 @@ const styles = RN.StyleSheet.create({
         fontWeight: 'bold',
     },
     days: {
-        fontSize: 24,
+        fontSize: 16,
         fontWeight: 'bold',
         color: 'gray',
     },
@@ -58,7 +44,7 @@ const styles = RN.StyleSheet.create({
         alignItems: 'center'
    },
     buttonText: {
-        fontSize: 24,
+        fontSize:  14,
         fontWeight: 'bold',
         color: '#fff',
     },

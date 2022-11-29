@@ -1,26 +1,18 @@
 import { useNavigation } from '@react-navigation/native';
 import { React, useState, useCallback } from 'react'
-import { View, Text, StyleSheet, TextInput, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import * as Clipboard from 'expo-clipboard';
 import colors from '../colors';
 import { FontAwesome } from '@expo/vector-icons';
 import  MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
-
-export default function ViewChallenge({ navigation }) {
-    
+export default function ActivityScreen() {
     return (
         <View style={styles.container}>
-            {/* <Text>plus screen</Text> */}
-            {/* <Button
-            title="Go to stackScreen2"
-            onPress={() => navigation.navigate('stackScreen2')}
-            /> */}
-
+         
             <View style={styles.statsSection}>
-                <Text style={styles.title}>Running</Text>
+                <Text style={styles.title}>Activity Feed</Text>
                 <View style={styles.statSection}>
                     <FontAwesome style={styles.sectionIcon} name="flag-o" size={18} color="white"/>
                     <Text style={styles.text}>Miles</Text>
@@ -39,7 +31,7 @@ export default function ViewChallenge({ navigation }) {
                     <Text style={styles.leaderboardHeaderText}>Leaderboard</Text>
                 </View>
                 <View style={styles.leaderboardSection}>
-                    <View>
+                    <View style={styles.leaderboardSectionContainer}>
                         <View style={styles.leaderboardFirstPerson}>
                             {/* <Image></Image> */}
                             <MaterialCommunityIcons style={styles.sectionIcon} name="account-group-outline" color="white" size={18}/>
@@ -86,17 +78,14 @@ export default function ViewChallenge({ navigation }) {
                                 <Text style={styles.smallText}>1. Xinyue Ma | </Text>
                                 <Text style={styles.smallText}>11/12/22 3:32 pm</Text>
                             </View>
-                            <Image style={styles.postImageContainer} source={require('../assets/randomGirl.png')} />
+                            <View style={styles.postImageContainer}>
+                                {/* IMG HERE */}
+                            </View>
                         </View>
                     </View>
                 </View>
             </View>
-            <TouchableOpacity
-                style={styles.logProgressButton}
-                onPress={() => navigation.navigate('Log Progress')}
-                underlayColor='#fff'>
-                <Text style={styles.logProgressText}>Log Progress</Text>
-            </TouchableOpacity>
+    
         </View>
     );
   }
@@ -163,6 +152,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         paddingLeft: 15,
     },
+    leaderboardSectionContainer: {
+        
+    },
     leaderboardFirstPerson: {
         flexDirection: "row",
         alignItems: "center",
@@ -225,6 +217,8 @@ const styles = StyleSheet.create({
         height: 175,
         // when image is bigger than specified dimensions, it will be cutoff
         overflow: "hidden",
+        backgroundColor: colors.primary,
+
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
     },

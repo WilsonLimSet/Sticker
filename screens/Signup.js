@@ -17,7 +17,7 @@ export default function Signup({ navigation }) {
     const { user } = await createUserWithEmailAndPassword(auth, email, password)
     await updateProfile(user,{
       displayName:email.split('@')[0].split('.')[0] ,
-      photoURL: 'https://my-cdn.com/assets/user/123.png',
+      photoURL: 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png',
     });
     await setDoc(doc(database, "users", user.uid), 
     { displayName:email.split('@')[0].split('.')[0] 
