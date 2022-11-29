@@ -11,7 +11,7 @@ import {database} from "../config/firebase";
 const backImage = require("../assets/backImage.jpg");
 import firebase from "../config/firebase";
 import { doc, getDoc, getFirestore, setDoc, collection} from "firebase/firestore";
-
+import colors from '../colors';
 
 export default function Profile() {
   // const [user,SetUser] = useState(null);
@@ -29,8 +29,6 @@ export default function Profile() {
   }
   const authh = getAuth();
   const user = authh.currentUser;
-  console.log(user);
-  console.log(user.photoURL);
 
   const profileImageUrl = user.photoURL;
 
@@ -38,35 +36,62 @@ export default function Profile() {
   const onSignOut = () => {
     signOut(auth).catch(error => console.log('Error logging out: ', error));
   };
+
+  useEffect(() => {
+    navigation.setOptions({
+        headerTitleStyle: {
+          fontSize: 24,
+          fontWeight: "600",
+        },
+        headerTintColor: "white",
+        headerStyle: {
+            backgroundColor: colors.darkGray,
+            shadowRadius: 0,
+            shadowOffset: {
+                height: 0,
+            },
+        },
+    });
+}, [navigation]);
   
   return (
     <View style={styles.container}>
-      <Image source={{ uri: profileImageUrl }} style={styles.userImg} />
-      <View style={styles.whiteSheet} />
-      <SafeAreaView style={styles.form}>
-        <Text style={{fontWeight: 'bold', alignSelf: "center", color: '#B8DCEA', fontSize: 18}}> Welcome {auth?.currentUser?.displayName} </Text>
-      <TouchableOpacity style={styles.button} onPress={onSignOut}>
-        <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 18}}> Log Out</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button}  onPress={() => navigation.navigate("EditProfile")}>
-        <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 18}}> Edit Profile</Text>
-      </TouchableOpacity>
-      </SafeAreaView>
-      <StatusBar barStyle="light-content" />
+      <View style={styles.subContainer}>  
+        <View style={styles.userImgContainer}>
+          <Image source={{ uri: profileImageUrl }} style={styles.userImg} />
+        </View>
+        <SafeAreaView style={styles.form}>
+          <Text style={{fontWeight: 'bold', alignSelf: "center", color: 'white', fontSize: 18, marginTop: 23}}> Welcome {auth?.currentUser?.displayName} </Text>
+          <TouchableOpacity style={styles.button} onPress={onSignOut}>
+            <Text style={{fontWeight: 'bold', color: 'black', fontSize: 18}}>Log Out</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}  onPress={() => navigation.navigate("EditProfile")}>
+            <Text style={{fontWeight: 'bold', color: "black", fontSize: 18}}>Edit Profile</Text>
+          </TouchableOpacity>
+        </SafeAreaView>
+        <StatusBar barStyle="light-content" />
+      </View>
     </View>
   );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: colors.darkGray,
+  },
+  subContainer: {
+    height: 600,
+    justifyContent: "center",
+  },
+  userImgContainer: {
+    justifyContent: "center",
+    alignItems: "center",
   },
   userImg: {
     height: 150,
     width: 150,
     borderRadius: 75,
     overflow: "hidden",
-    borderWidth: 1,
   },
   title: {
     fontSize: 36,
@@ -83,24 +108,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 12,
   },
-  backImage: {
-    width: "100%",
-    height: 340,
-    position: "absolute",
-    top: 0,
-    resizeMode: 'cover',
-  },
-  whiteSheet: {
-    width: '100%',
-    height: '75%',
-    position: "absolute",
-    bottom: 0,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 60,
-  },
   form: {
-    flex: 1,
-    justifyContent: 'center',
     marginHorizontal: 30,
   },
   button: {
@@ -109,6 +117,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 40,
+    marginTop: 25,
   },
 });
