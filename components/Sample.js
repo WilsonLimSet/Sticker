@@ -32,7 +32,7 @@ const styles = RN.StyleSheet.create({
         fontWeight: 'bold',
     },
     days: {
-        fontSize: 64,
+        fontSize: 16,
         fontWeight: 'bold',
         color: 'gray',
     },
@@ -44,7 +44,7 @@ const styles = RN.StyleSheet.create({
         alignItems: 'center'
    },
     buttonText: {
-        fontSize: 24,
+        fontSize:  14,
         fontWeight: 'bold',
         color: '#fff',
     },

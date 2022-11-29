@@ -10,11 +10,7 @@ export default function ExploreChallenges() {
     const [products, setProducts] = React.useState([]);
     const navigation = useNavigation();
 
-    React.useLayoutEffect(() => {
-        navigation.setOptions({
-            headerRight: () => <RN.Button title='Add' onPress={() => navigation.navigate('Add')} />
-        })
-    },[navigation])
+    
 
     React.useEffect(() => {
         const collectionRef = collection(database, 'exploreChallenges');
@@ -45,11 +41,12 @@ export default function ExploreChallenges() {
 const styles = RN.StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F5F3F9',
+        backgroundColor: '#000000',
     },
     title: {
         fontSize: 22,
         fontWeight: 'bold',
         margin: 16,
+        color: 'gray',
     },
 });

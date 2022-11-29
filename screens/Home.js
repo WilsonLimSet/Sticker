@@ -68,6 +68,7 @@ const Home = () => {
                             </View>
                         </View>
                     </TouchableOpacity>
+                    
                     <TouchableOpacity onPress={() => navigation.navigate('View Challenge')}>
                         <View style={styles.entry}>
                             <View style={styles.footer}>
