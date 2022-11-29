@@ -3,7 +3,6 @@ import * as RN from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {database} from "../config/firebase";
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
-import Product from '../components/Product';
 import Sample from '../components/Sample';
 
 export default function Test() {

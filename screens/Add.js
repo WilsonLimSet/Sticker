@@ -9,24 +9,17 @@ export default function Add() {
     const navigation = useNavigation();
     const [isOpen, setIsOpen] = React.useState(false);
     const [newItem, setNewItem] = React.useState({
-        emoji: '📷',
         name: '',
         price: 0,
         isSold: false,
         createdAt: new Date(),
     });
 
-    const handlePick = (emojiObject) => {
+    const handlePick = () => {
         setNewItem({
             ...newItem,
-            emoji: emojiObject.emoji,
         });
-      /* example emojiObject = { 
-          "emoji": "❤️",
-          "name": "red heart",
-          "slug": "red_heart",
-        }
-      */
+    
     }
 
     const onSend = async () => {
@@ -37,13 +30,8 @@ export default function Add() {
     return(
         <RN.View style={styles.container}>
             <RN.Text style={styles.title}>Sell a New Product</RN.Text>
-            <RN.Text onPress={() => setIsOpen(true)} style={styles.emoji}>{newItem.emoji}</RN.Text>
-            <EmojiPicker
-                onEmojiSelected={handlePick}
-                open={isOpen}
-                onClose={() => setIsOpen(false)} 
-            />
-                <RN.TextInput 
+            <RN.Text onPress={() => setIsOpen(true)} style={styles.emoji}></RN.Text>
+                            <RN.TextInput 
                     onChangeText={(text) => setNewItem({...newItem, name: text})}
                     style={styles.inputContainer} 
                     placeholder='Product Name' 

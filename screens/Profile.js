@@ -14,19 +14,19 @@ import { doc, getDoc, getFirestore, setDoc, collection} from "firebase/firestore
 
 
 export default function Profile() {
-  // // const [user,SetUser] = useState(null);
-  // const sendDataToFirestore = async() => {
-  //   const uid = auth.currentUser?.uid;
-  //   const docRef = doc(database, "user", uid);
-  //   const docSnap = await getDoc(docRef);
-  //   if (docSnap.exists()) {
-  //     console.log("Document Data", docSnap.data());
-  //     SetUser.doc.data()
-  //   }
-  //   else{
-  //     console.log("Document Data Not Exist");
-  //   }
-  // }
+  // const [user,SetUser] = useState(null);
+  const sendDataToFirestore = async() => {
+    const uid = auth.currentUser?.uid;
+    const docRef = doc(database, "user", uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      console.log("Document Data", docSnap.data());
+      SetUser.doc.data()
+    }
+    else{
+      console.log("Document Data Not Exist");
+    }
+  }
   const authh = getAuth();
   const user = authh.currentUser;
   console.log(user);

@@ -1,5 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
-import { React, useState, useCallback } from 'react'
+import * as React from 'react';
+import { useState, useCallback } from 'react'
+import { collection, addDoc } from 'firebase/firestore';
+import {database} from '../config/firebase';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import * as Clipboard from 'expo-clipboard';
@@ -25,10 +28,10 @@ export default function CreateChallenge({ navigation }) {
     const [openDuration, setDurationOpen] = useState(false);
     const [valueDuration, setDurationValue] = useState(null);
     const [itemsDuration, setDurationItems] = useState([
-      {label: '1', value: '1'},
-      {label: '2', value: '2'},
-      {label: '3', value: '3'},
-      {label: '4', value: '4'},
+      {label: '7', value: '7'},
+      {label: '14', value: '14'},
+      {label: '30', value: '30'},
+      {label: '100', value: '100'},
     ]);
 
     const [openFriends, setFriendsOpen] = useState(false);
@@ -60,6 +63,29 @@ export default function CreateChallenge({ navigation }) {
       Clipboard.setStringAsync('https://join.sticker.me/89L8d5fhj4')
     }
 
+    ////////////////////////////////////////////NEW STUFF
+
+    const [newItem, setNewItem] = React.useState({
+      title: '',
+      description: '',
+      duration: 0,
+      metric: '',
+      friends:'',
+      createdAt: new Date(),
+  });
+
+  const handlePick = () => {
+      setNewItem({
+          ...newItem,
+      });
+  
+  }
+
+    const onSend = async () => {
+      const docRef = await addDoc(collection(database, 'userChallenges'), newItem);
+      navigation.goBack();
+    }
+
     return (
       <View style={styles.container}>
         {/* <Text>plus screen</Text> */}
@@ -74,14 +100,15 @@ export default function CreateChallenge({ navigation }) {
           </Text>
           <TextInput
             style={styles.titleInput}
-            onChangeText={onChangeTitle}
+            //onChangeText={onChangeTitle}
+            onChangeText= {(text) => setNewItem({...newItem, title: text})}
             value={title}
             placeholder="| Challenge Title"
             autoCorrect="false"
           />
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText}
+            onChangeText= {(text) => setNewItem({...newItem, description: text})}
             value={text}
             placeholder="Enter description for this challenge"
           />
@@ -104,7 +131,8 @@ export default function CreateChallenge({ navigation }) {
               setItems={setItems}
               placeholder="Select Metric"
               placeholderStyle={{color: colors.placeholderGray}}
-              onOpen={onMetricOpen}
+              //onOpen={onMetricOpen}
+              onChangeValue={(value) => setNewItem({...newItem, metric: value})}
             />
           </View>
         </View>
@@ -126,7 +154,11 @@ export default function CreateChallenge({ navigation }) {
                 setItems={setDurationItems}
                 placeholder="Select Number of Days"
                 placeholderStyle={{color: colors.placeholderGray}}
-                onOpen={onDurationOpen}
+                //onOpen={onDurationOpen}
+               // onChangeValue = {}
+               //onChangeText= {(text) => setNewItem({...newItem, title: text})}
+                onChangeValue={(value) => setNewItem({...newItem, duration: value})}
+                //onOpen = {(setItems) => setNewItem({...newItem, duration:setItems.value, items:setItems})}
               />
             </View>
           </View>
@@ -147,7 +179,7 @@ export default function CreateChallenge({ navigation }) {
                 setValue={setFriendsValue}
                 setItems={setFriendsItems}
                 onOpen={onFriendsOpen}
-
+                onChangeValue={(value) => setNewItem({...newItem, friends: value})}
                 multiple={true}
                 mode="BADGE"
                 badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#8ac926"]}
@@ -175,7 +207,7 @@ export default function CreateChallenge({ navigation }) {
               </View>
               <TouchableOpacity
                 style={styles.beginChallengeButton}
-                onPress={() => navigation.navigate('Home')}
+                onPress={onSend}
                 underlayColor='#fff'>
                 <Text style={styles.beginChallengeText}>Begin Challenge</Text>
               </TouchableOpacity>
