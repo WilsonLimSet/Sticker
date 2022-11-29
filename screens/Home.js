@@ -5,8 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import colors from '../colors';
 import {database} from "../config/firebase";
-import Sample from '../components/Sample';
-
+import Created from '../components/Created';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { getAuth } from "firebase/auth";
 
@@ -71,7 +70,8 @@ const Home = () => {
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={{paddingBottom: 100}}>
-            <View style={styles.row}>
+
+           
                 <View style={styles.column}>
                     <View style={styles.toggle}>
                         <Text style={styles.subtitle}>Show active Challenges</Text>
@@ -83,52 +83,8 @@ const Home = () => {
                             value={isEnabled}
                         />
                     </View>
-                    <TouchableOpacity onPress={() => navigation.navigate('View Challenge')}>
-                        <View style={styles.entry}>
-                            <View style={styles.aboveFooter}>
-                                <View style={styles.circle}></View>
-                                <Image source={require('../assets/star-logo-simplified.png')} />
-                            </View>
-                            <View style={styles.footer}>
-                                <Text style={styles.title}>Cycling</Text>
-                                <View style={styles.profileBar}>
-                                    <Image source={{ uri: profileImageUrl }} style={styles.profileBarProfiles}/>
-                                    <Image source={{ uri: profileImageUrl }} style={styles.profileBarProfiles}/>
-                                </View>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
                     
-                    <TouchableOpacity onPress={() => navigation.navigate('View Challenge')}>
-                        <View style={styles.entry}>
-                            <View style={styles.aboveFooter}>
-                                <View style={styles.circle}></View>
-                                <Image source={require('../assets/star-logo-simplified.png')} />
-                            </View>
-                            <View style={styles.footer}>
-                                <Text style={styles.title}>Walking</Text>
-                                <View style={styles.profileBar}>
-                                    {/* circle profile bar */}
-                                </View>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.column}>
-                    <TouchableOpacity onPress={() => navigation.navigate('View Challenge')}>
-                        <View style={styles.entry}>
-                            <View style={styles.aboveFooter}>
-                                <View style={styles.circle}></View>
-                                <Image source={require('../assets/star-logo-simplified.png')} />
-                            </View>
-                            <View style={styles.footer}>
-                                    <Text style={styles.title}>Running</Text>
-                                <View style={styles.profileBar}>
-                                    {/* circle profile bar */}
-                                </View>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
+                    
                     <TouchableOpacity onPress={() => navigation.navigate('View Challenge')}>
                         <View style={styles.entry}>
                             <View style={styles.aboveFooter}>
@@ -143,9 +99,11 @@ const Home = () => {
                             </View>
                         </View>
                     </TouchableOpacity>
+                   
                 
                 </View>
-            </View>
+                {products.map(product => <Created key={product.name} {...product} />)}
+           
             </ScrollView>
         </View>
     );
