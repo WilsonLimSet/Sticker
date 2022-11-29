@@ -68,7 +68,7 @@ export default function CreateChallenge({ navigation }) {
     ////////////////////////////////////////////NEW STUFF
 
     const [newItem, setNewItem] = React.useState({
-      title: '',
+      name: '',
       description: '',
       duration: 0,
       metric: '',
@@ -103,7 +103,7 @@ export default function CreateChallenge({ navigation }) {
           <TextInput
             style={styles.titleInput}
             //onChangeText={onChangeTitle}
-            onChangeText= {(text) => setNewItem({...newItem, title: text})}
+            onChangeText= {(text) => setNewItem({...newItem, name: text})}
             value={title}
             placeholder="| Challenge Title"
             autoCorrect="false"

@@ -1,24 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { View, TouchableOpacity, Text, Image, StyleSheet, Switch } from "react-native";
+import React, { useEffect, useState, useLayoutEffect } from "react";
+import { View, TouchableOpacity, Text, Image, StyleSheet, Switch,ScrollView  } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import colors from '../colors';
-import { database } from "../config/firebase";
+import {database} from "../config/firebase";
+import Sample from '../components/Sample';
+
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { getAuth } from "firebase/auth";
 
 const Home = () => {
     const auth = getAuth();
     const user = auth.currentUser;
-
     const profileImageUrl = user.photoURL;
-
     const navigation = useNavigation();
-
+    const [products, setProducts] = useState([]);
     const [isEnabled, setIsEnabled] = useState(true);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-
+ 
     useEffect(() => {
+        //
+        const collectionRef = collection(database, 'userChallenges');
+        const q = query(collectionRef, orderBy('name', 'desc'));
+
+    const unsubscribe = onSnapshot(q, querySnapshot => {
+        console.log('querySnapshot unsusbscribe');
+          setProducts(
+            querySnapshot.docs.map(doc => ({
+                name: doc.data().name,
+            }))
+          );
+        });
+        return unsubscribe;
+    },[])
+
+    useLayoutEffect(() => {
         navigation.setOptions({
             title: "Dashboard",
             headerTitleStyle: {
@@ -49,10 +66,12 @@ const Home = () => {
                 />
             ),
         });
+        
     }, [navigation]);
 
     return (
         <View style={styles.container}>
+            <ScrollView contentContainerStyle={{paddingBottom: 100}}>
             <View style={styles.row}>
                 <View style={styles.column}>
                     <View style={styles.toggle}>
@@ -125,8 +144,10 @@ const Home = () => {
                             </View>
                         </View>
                     </TouchableOpacity>
+                
                 </View>
             </View>
+            </ScrollView>
         </View>
     );
     };

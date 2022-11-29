@@ -12,10 +12,10 @@ export default function ExploreChallenges() {
     const user = auth.currentUser;
 
     const profileImageUrl = user.photoURL;
-    const [products, setProducts] = React.useState([]);
+    const [products, setProducts] = useState([]);
     const navigation = useNavigation();
 
-    React.useEffect(() => {
+    useEffect(() => {
         const collectionRef = collection(database, 'exploreChallenges');
         const q = query(collectionRef, orderBy('name', 'desc'));
 
