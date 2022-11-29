@@ -7,15 +7,14 @@ import { auth } from './config/firebase';
 import {Camera,CameraType} from 'expo-camera';
 import * as MedicaLibrary from 'expo-media-library';
 import Login from './screens/Login';
-import Add from './screens/ActivityScreen';
 import Signup from './screens/Signup';
-import Chat from './screens/Chat';
 import Home from './screens/Home';
+import TakePhoto from './screens/TakePhoto';
 import ExploreChallenges from './screens/ExploreChallenges';
 import Profile from './screens/Profile';
 import ActivityScreen from './screens/ActivityScreen';
 import CreateChallenge from './screens/CreateChallenge';
-import ChallengeScreen2 from './screens/ChallengeScreen2';
+import LogProgress from './screens/LogProgress';
 import ViewChallenge from './screens/ViewChallenge';
 import EditProfile from './screens/EditProfile';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -28,7 +27,6 @@ library.add(fab, faCircleChevronDown)
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
-const challengeStack = createStackNavigator();
 const AuthenticatedUserContext = createContext({});
 
 const AuthenticatedUserProvider = ({ children }) => {
@@ -43,7 +41,7 @@ return (
 function HomeStack() {
   return (
     <Tab.Navigator labeled={false} barStyle={{ backgroundColor: colors.tabBar, position: 'absolute', overflow: 'hidden', borderTopLeftRadius: 30, borderTopRightRadius: 30}} activeColor={colors.darkGray} screenOptions={{ headerShown: true }}>
-      <Tab.Screen name="Home" component={ChatStack}            //Home Screen
+      <Tab.Screen name="Home" component={ChallengeStack}            //Home Screen
       options={{
         tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="home" color={color} size={26}/>
@@ -55,7 +53,7 @@ function HomeStack() {
             <MaterialCommunityIcons name="magnify" color={color} size={26}/>
         ),
     }}/>
-    <Tab.Screen name="Challenge" component={ChallengeScreens}      // Notification Screen
+    <Tab.Screen name="Challenge" component={CreateChallenge}     // Notification Screen
       options={{
         tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="plus-circle" color={color} size={26}/>
@@ -78,11 +76,13 @@ function HomeStack() {
 }
 
 
-function ChatStack() {
+function ChallengeStack() {
   return (
      <Stack.Navigator defaultScreenOptions={Home}>
        <Stack.Screen name='Home' component={Home} />
        <Stack.Screen name='View Challenge' component={ViewChallenge} />
+       <Stack.Screen name='Log Progress' component={LogProgress} />
+       <Stack.Screen name='Take Photo' component={TakePhoto} />
      </Stack.Navigator>
   );
 }
@@ -93,15 +93,6 @@ function ProfileStack() {
        <Stack.Screen name='Profile' component={Profile} />
        <Stack.Screen name='EditProfile' component={EditProfile} />
      </Stack.Navigator>
-  );
-}
-
-function ChallengeScreens(){
-  return (
-    <challengeStack.Navigator screenOptions={{ headerShown: false }}>
-      <challengeStack.Screen name='Create Challenges' component={CreateChallenge} />
-      <challengeStack.Screen name='View Challenges' component={ChallengeScreen2} />
-    </challengeStack.Navigator>
   );
 }
 

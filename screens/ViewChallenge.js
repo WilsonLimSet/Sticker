@@ -96,7 +96,7 @@ export default function ViewChallenge({ navigation }) {
             {/* LOG PROGRESS BUTTON HERE */}
             <TouchableOpacity
                 style={styles.logProgressButton}
-                onPress={() => navigation.navigate('Home')}
+                onPress={() => navigation.navigate('Log Progress')}
                 underlayColor='#fff'>
                 <Text style={styles.logProgressText}>Log Progress</Text>
             </TouchableOpacity>

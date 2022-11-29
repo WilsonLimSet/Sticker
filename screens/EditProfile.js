@@ -11,7 +11,6 @@ export default function EditProfile() {
   const [photo, setPhoto] = useState(null);
   const [loading, setLoading] = useState(false);
   const [photoURL, setPhotoURL] = useState("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png");
- 
   const navigation = useNavigation();
 
 

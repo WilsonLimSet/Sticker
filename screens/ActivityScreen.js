@@ -85,13 +85,7 @@ export default function ActivityScreen() {
                     </View>
                 </View>
             </View>
-            {/* LOG PROGRESS BUTTON HERE */}
-            <TouchableOpacity
-                style={styles.logProgressButton}
-                onPress={() => navigation.navigate('Home')}
-                underlayColor='#fff'>
-                <Text style={styles.logProgressText}>Log Progress</Text>
-            </TouchableOpacity>
+    
         </View>
     );
   }
