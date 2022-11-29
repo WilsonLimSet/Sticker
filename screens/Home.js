@@ -4,9 +4,18 @@ import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import colors from '../colors';
-const catImageUrl = "https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=49ed3252c0b2ffb49cf8b508892e452d";
+import { database } from "../config/firebase";
+import { getAuth } from "firebase/auth";
+
+// const profileImageUrl = "https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=49ed3252c0b2ffb49cf8b508892e452d";
 
 const Home = () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    // console.log(user);
+    // console.log(user.photoURL);
+
+    const profileImageUrl = user.photoURL;
 
     const navigation = useNavigation();
 
@@ -29,15 +38,17 @@ const Home = () => {
                 },
             },
             headerLeft: () => (
-                <FontAwesome name="bars" size={24} color="white" style={{marginLeft: 15}}/>
+                // <FontAwesome name="bars" size={24} color="white" style={{marginLeft: 15}}/>
+                null
             ),
             headerRight: () => (
                 <Image
-                    source={{ uri: catImageUrl }}
+                    source={{ uri: profileImageUrl }}
                     style={{
                         width: 40,
                         height: 40,
                         marginRight: 15,
+                        borderRadius: "50%"
                     }}
                 />
             ),
@@ -60,16 +71,25 @@ const Home = () => {
                     </View>
                     <TouchableOpacity onPress={() => navigation.navigate('View Challenge')}>
                         <View style={styles.entry}>
+                            <View style={styles.aboveFooter}>
+                                <View style={styles.circle}></View>
+                                <Image source={require('../assets/star-logo-simplified.png')} />
+                            </View>
                             <View style={styles.footer}>
                                 <Text style={styles.title}>Cycling</Text>
                                 <View style={styles.profileBar}>
-                                    {/* circle profile bar */}
+                                    <Image source={{ uri: profileImageUrl }} style={styles.profileBarProfiles}/>
+                                    <Image source={{ uri: profileImageUrl }} style={styles.profileBarProfiles}/>
                                 </View>
                             </View>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigation.navigate('View Challenge')}>
                         <View style={styles.entry}>
+                            <View style={styles.aboveFooter}>
+                                <View style={styles.circle}></View>
+                                <Image source={require('../assets/star-logo-simplified.png')} />
+                            </View>
                             <View style={styles.footer}>
                                 <Text style={styles.title}>Walking</Text>
                                 <View style={styles.profileBar}>
@@ -82,6 +102,10 @@ const Home = () => {
                 <View style={styles.column}>
                     <TouchableOpacity onPress={() => navigation.navigate('View Challenge')}>
                         <View style={styles.entry}>
+                            <View style={styles.aboveFooter}>
+                                <View style={styles.circle}></View>
+                                <Image source={require('../assets/star-logo-simplified.png')} />
+                            </View>
                             <View style={styles.footer}>
                                     <Text style={styles.title}>Running</Text>
                                 <View style={styles.profileBar}>
@@ -92,6 +116,10 @@ const Home = () => {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigation.navigate('View Challenge')}>
                         <View style={styles.entry}>
+                            <View style={styles.aboveFooter}>
+                                <View style={styles.circle}></View>
+                                <Image source={require('../assets/star-logo-simplified.png')} />
+                            </View>
                             <View style={styles.footer}>
                                 <Text style={styles.title}>Drinking Water</Text>
                                 <View style={styles.profileBar}>
@@ -143,6 +171,19 @@ const Home = () => {
             borderRadius: 25,
             margin: 10,
         },
+        aboveFooter: {
+            alignItems: 'center',
+            height: "80%",
+            justifyContent: "center",
+        },
+        circle: {
+            width: 100,
+            height: 100,
+            borderWidth: 6,
+            borderColor: "#c0e1ef",
+            borderRadius: "50%",
+            position: "absolute",
+        },
         footer: {
             flex: 1,
             justifyContent: "flex-end",
@@ -155,7 +196,7 @@ const Home = () => {
         },
         subtitle: {
             paddingRight: 5,
-            fontSize: 16,
+            fontSize: 15,
             fontWeight: "400",
         },
         profileBar: {
@@ -163,6 +204,14 @@ const Home = () => {
             height: 42,
             borderBottomRightRadius: 25,
             borderBottomLeftRadius: 25,
-            overflow: "hidden",
+            // overflow: "hidden",
+            flexDirection: "row",
+            alignItems: "center"
         },
+        profileBarProfiles: {
+            width: 24,
+            height: 24,
+            marginLeft: 10,
+            borderRadius: "50%"
+        }
     });

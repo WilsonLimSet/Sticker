@@ -20,6 +20,7 @@ export default function CreateChallenge({ navigation }) {
       {label: 'Days', value: 'days'},
       {label: 'Miles', value: 'miles'},
       {label: 'Pounds', value: 'pounds'},
+      {label: 'Hours', value: 'hours'},
     ]);
 
     const [openDuration, setDurationOpen] = useState(false);

@@ -27,19 +27,21 @@ export default function Profile() {
   //     console.log("Document Data Not Exist");
   //   }
   // }
-  const authh = getAuth();
-  const user = authh.currentUser;
+  const auth = getAuth();
+  const user = auth.currentUser;
   console.log(user);
+  console.log(user.photoURL);
+
+  const profileImageUrl = user.photoURL;
 
   const navigation = useNavigation();
   const onSignOut = () => {
     signOut(auth).catch(error => console.log('Error logging out: ', error));
   };
-
   
   return (
     <View style={styles.container}>
-      <Image source={backImage} style={styles.userImg} />
+      <Image source={{ uri: profileImageUrl }} style={styles.userImg} />
       <View style={styles.whiteSheet} />
       <SafeAreaView style={styles.form}>
         <Text style={{fontWeight: 'bold', alignSelf: "center", color: '#B8DCEA', fontSize: 18}}> Welcome {auth?.currentUser?.displayName} </Text>
