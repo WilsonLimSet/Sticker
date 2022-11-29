@@ -49,7 +49,7 @@ function HomeStack({ routeName }) {
                     ),
 
                 }} />
-            <Tab.Screen name="Notification" component={ExploreChallenges}      // Notification Screen
+            <Tab.Screen name="Notification" component={ExploreStack}      // Notification Screen
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="magnify" color={color} size={26} />
@@ -85,14 +85,22 @@ function ChallengeStack() {
             <Stack.Screen name='View Challenge' component={ViewChallenge} />
             <Stack.Screen name='Log Progress' component={LogProgress} />
             <Stack.Screen name='Take Photo' component={TakePhoto} />
-
+        </Stack.Navigator>
+    );
+}
+function ExploreStack() {
+    return (
+        <Stack.Navigator defaultScreenOptions={ExploreChallenges}>
+            <Stack.Screen name='Explore Challenge' component={ExploreChallenges} />
         </Stack.Navigator>
     );
 }
 
+
+
 function ProfileStack() {
     return (
-        <Stack.Navigator defaultScreenOptions={Profile}>
+        <Stack.Navigator defaultScreenOptions={Profile} screenOptions={{ headerShown: false }}>
             <Stack.Screen name='Profile' component={Profile} />
             <Stack.Screen name='EditProfile' component={EditProfile} />
         </Stack.Navigator>

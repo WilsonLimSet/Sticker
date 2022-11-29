@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext, useEffect } from 'react';
+import React, { useState, createContext, useContext, useEffect , useLayoutEffect} from 'react';
 import { View, TouchableOpacity, Text, Image, StyleSheet, Switch,ScrollView } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import {database} from "../config/firebase";
@@ -62,30 +62,16 @@ export default function ExploreChallenges() {
         return unsubscribe;
     }, []);
 
-    // React.useEffect(() => {
-    //     const collectionRef = collection(database, 'exploreChallenges');
-    //     const q = query(collectionRef, orderBy('name', 'desc'));
-
-    // const unsubscribe = onSnapshot(q, querySnapshot => {
-    //     console.log('querySnapshot unsusbscribe');
-    //       setProducts(
-    //         querySnapshot.docs.map(doc => ({
-    //             name: doc.data().name,
-    //             days: doc.data().days,
-    //         }))
-    //       );
-    //     });
-    // return unsubscribe;
-    // },[])
 
     return(
         <View style={styles.container}>
             <ScrollView contentContainerStyle={{paddingBottom: 100}}>
-            <Text style={styles.title}>Explore Challenges</Text>
+            {/* <Text style={styles.title}>Sponsored </Text> */}
                 {products.map(product => <Sample key={product.name} {...product} />)}
             </ScrollView>
         </View>
-    )
+    );
+
 }
 
 const styles = StyleSheet.create({

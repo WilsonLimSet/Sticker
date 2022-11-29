@@ -37,22 +37,22 @@ export default function Profile() {
     signOut(auth).catch(error => console.log('Error logging out: ', error));
   };
 
-  useEffect(() => {
-    navigation.setOptions({
-        headerTitleStyle: {
-          fontSize: 24,
-          fontWeight: "600",
-        },
-        headerTintColor: "white",
-        headerStyle: {
-            backgroundColor: colors.darkGray,
-            shadowRadius: 0,
-            shadowOffset: {
-                height: 0,
-            },
-        },
-    });
-}, [navigation]);
+//   useEffect(() => {
+//     navigation.setOptions({
+//         headerTitleStyle: {
+//           fontSize: 24,
+//           fontWeight: "600",
+//         },
+//         headerTintColor: "white",
+//         headerStyle: {
+//             backgroundColor: colors.darkGray,
+//             shadowRadius: 0,
+//             shadowOffset: {
+//                 height: 0,
+//             },
+//         },
+//     });
+// }, [navigation]);
   
   return (
     <View style={styles.container}>

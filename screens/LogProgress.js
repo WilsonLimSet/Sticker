@@ -14,18 +14,7 @@ export default function LogProgress() {
     <View style={styles.container}>
         <View style={styles.statsSection}>
             <Text style={styles.title}>Log Progress</Text>
-            <View style={styles.statSection}>
-                <FontAwesome style={styles.sectionIcon} name="flag-o" size={18} color="white"/>
-                <Text style={styles.text}>Miles</Text>
-            </View>
-            <View style={styles.statSection}>
-                <MaterialCommunityIcons style={styles.sectionIcon} name="calendar-clock-outline" color="white" size={18}/>
-                <Text style={styles.text}>Nov 25 - Dec 17 {"(22 days)"}</Text>
-            </View>
-            <View style={styles.statSection}>
-                <MaterialCommunityIcons style={styles.sectionIcon} name="account-group-outline" color="white" size={18}/>
-                <Text style={styles.text}>3 joined</Text>
-            </View>
+            
         </View>
       
         {/* Take Photo HERE */}
