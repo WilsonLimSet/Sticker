@@ -6,6 +6,10 @@ import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import Sample from '../components/Sample';
 import colors from '../colors';
 import { getAuth } from "firebase/auth";
+import { AntDesign } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons'; 
+
+
 
 export default function ExploreChallenges() {
     const auth = getAuth();
@@ -78,6 +82,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.darkGray,
+        //backgroundColor: white ,
         padding: 10,
         // paddingTop: 40,
         // boxSizing: "border-box"
@@ -91,7 +96,7 @@ const styles = StyleSheet.create({
         flex: "0%",
     },
     toggle: {
-        backgroundColor: colors.lightGray,
+        backgroundColor: '#B8DCEA',
         height: 71,
         borderRadius: 14,
         alignItems: 'center',

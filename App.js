@@ -23,6 +23,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { faCircleChevronDown } from '@fortawesome/free-solid-svg-icons/faCircleChevronDown';
 import colors from './colors';
+import Sample from './components/Sample';
 library.add(fab, faCircleChevronDown)
 
 const Tab = createMaterialBottomTabNavigator();
@@ -92,6 +93,8 @@ function ExploreStack() {
     return (
         <Stack.Navigator defaultScreenOptions={ExploreChallenges}>
             <Stack.Screen name='Explore Challenge' component={ExploreChallenges} />
+            <Stack.Screen name='Create Challenge' component={CreateChallenge} />
+            <Stack.Screen name='Sample' component={Sample} />
         </Stack.Navigator>
     );
 }
