@@ -82,7 +82,16 @@ function ChallengeStack() {
        <Stack.Screen name='Home' component={Home} />
        <Stack.Screen name='View Challenge' component={ViewChallenge} />
        <Stack.Screen name='Log Progress' component={LogProgress} />
-       <Stack.Screen name='Take Photo' component={TakePhoto} />
+       <Stack.Screen name='Take Photo' component={TakePhoto} 
+       options={{
+        headerShown: false,
+        tabBarStyle: { display: "none" },
+        tabBarVisible:false,
+        navigationOptions: {
+          headerShown: false,
+        }
+    }}/>
+
      </Stack.Navigator>
   );
 }
