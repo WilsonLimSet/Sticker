@@ -1,116 +1,55 @@
 import * as React from 'react';
 import * as RN from 'react-native';
-import {  View, Text, Image,FlatList, Pressable, ScrollView, StyleSheet, Dimensions } from "react-native";
-import { Svg, Path } from "react-native-svg";
-import colors from '../colors';
+import { useNavigation } from '@react-navigation/native';
+import {database} from "../config/firebase";
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
-import {useState,useEffect} from "react"
-import { database } from "../config/firebase";
-import { doc } from "firebase/firestore";
+import Sample from '../components/Sample';
 
-export default function ExploreChallenges({ navigation }) {
+export default function ExploreChallenges() {
 
-  // const [users,setUsers] = useState([]);
-  // const exploreRef = collection(database,'exploreChallenges');
-  
+    const [products, setProducts] = React.useState([]);
+    const navigation = useNavigation();
 
-  // useEffect( () => {
-  //   exploreRef
-  //   .onSnapshot(
-  //     querySnapshot => {
-  //       const users = []
-  //       querySnapshot.forEach((doc) => {
-  //         const { Days,Name} =doc.data()
-  //         users.push({
-  //           id:doc.id, Days, Name,
-  //         })
-  //       })
-  //       setUsers(users)
-  //     }
-  //   )
-  // })
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => <RN.Button title='Add' onPress={() => navigation.navigate('Add')} />
+        })
+    },[navigation])
 
-  // const [user,SetUser] = useState(null);
-  // const sendDataToFirestore = async() => {
-  //   const uid = auth.currentUser?.uid;
-  //   const docRef = doc(database, "user", uid);
-  //   const docSnap = await getDoc(docRef);
-  //   if (docSnap.exists()) {
-  //     console.log("Document Data", docSnap.data());
-  //     SetUser.doc.data()
-  //   }
-  //   else{
-  //     console.log("Document Data Not Exist");
-  //   }
-  // }
-  // const [products, setProducts] = React.useState([]);
+    React.useEffect(() => {
+        const collectionRef = collection(database, 'exploreChallenges');
+        const q = query(collectionRef, orderBy('name', 'desc'));
 
-  // React.useLayoutEffect(() => {
-  //     navigation.setOptions({
-  //         headerRight: () => <RN.Button title='Add' onPress={() => navigation.navigate('Add')} />
-  //     })
-  // },[navigation])
+    const unsubscribe = onSnapshot(q, querySnapshot => {
+        console.log('querySnapshot unsusbscribe');
+          setProducts(
+            querySnapshot.docs.map(doc => ({
+                name: doc.data().name,
+                days: doc.data().days,
+            }))
+          );
+        });
+    return unsubscribe;
+    },[])
 
-  // React.useEffect(() => {
-  //     const collectionRef = collection(database, 'products');
-  //     const q = query(collectionRef, orderBy('createdAt', 'desc'));
-
-  // const unsubscribe = onSnapshot(q, querySnapshot => {
-  //     console.log('querySnapshot unsusbscribe');
-  //       setProducts(
-  //         querySnapshot.docs.map(doc => ({ 
-  //             days: doc.data().days,
-  //             name: doc.data().name,
-  //         }))
-  //       );
-  //     });
-  // return unsubscribe;
-  // },[])
-
-
-  
-  return (
-    // <View style={stylesheet.container}>
-    //   <FlatList
-    //     style = {{height: '100'}}
-    //     //data = {users}
-    //     numColumns = {1}
-    //     renderItem = {({item}) =>(
-    //       <Pressable
-    //         style ={stylesheet.container}
-    //       >
-    //         <View style={stylesheet.innerContainer}>
-    //           <Text style={stylesheet.days}></Text>
-              <Text style={stylesheet.name}> Hello </Text>
-    //         </View>
-
-
-    //       </Pressable>
-    //   )}
-    //   />
-		
-			
-	
-    // </View>
-	);
+    return(
+        <RN.View style={styles.container}>
+            <RN.ScrollView contentContainerStyle={{paddingBottom: 100}}>
+            <RN.Text style={styles.title}>Explore Challenges</RN.Text>
+                {products.map(product => <Sample key={product.name} {...product} />)}
+            </RN.ScrollView>
+        </RN.View>
+    )
 }
 
-const stylesheet = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: colors.darkGray,
-  },
-  innerContainer: {
-    alignItems: "center",
-    flexDirection: "column",
-  },
-  days: {
-    fontWeight: "bold",
-  },
-  name:{
-    fontWeight: "300",
-  }
-	
-	
+const styles = RN.StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#F5F3F9',
+    },
+    title: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        margin: 16,
+    },
 });
