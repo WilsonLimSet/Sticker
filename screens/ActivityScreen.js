@@ -1,91 +1,135 @@
 import { useNavigation } from '@react-navigation/native';
-import { React, useState, useCallback } from 'react'
-import { View, Text, StyleSheet, TextInput } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import * as Clipboard from 'expo-clipboard';
+import { React, useState, useCallback, useLayoutEffect } from 'react'
+import { View, Text, StyleSheet, TextInput, Image, Pressable } from 'react-native';
 import colors from '../colors';
 import { FontAwesome } from '@expo/vector-icons';
 import  MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { getAuth } from "firebase/auth";
+
 export default function ActivityScreen() {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const profileImageUrl = user.photoURL;
+    const navigation = useNavigation();
+    const [liked, setLiked] = useState(false);
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            title: "Dashboard",
+            headerTitleStyle: {
+                fontSize: 30,
+            },
+            headerTitleAlign:'left',
+            headerTintColor: "white",
+            headerStyle: {
+                backgroundColor: colors.lightGray,
+                shadowRadius: 0,
+                shadowOffset: {
+                    height: 0,
+                },
+            },
+            headerLeft: () => (
+                // <FontAwesome name="bars" size={24} color="white" style={{marginLeft: 15}}/>
+                null
+            ),
+            headerRight: () => (
+                <Image
+                    source={{ uri: profileImageUrl }}
+                    style={{
+                        width: 40,
+                        height: 40,
+                        marginRight: 15,
+                        borderRadius: "50%"
+                    }}
+                />
+            ),
+        });
+    }, [navigation]);
+
     return (
         <View style={styles.container}>
-         
-            <View style={styles.statsSection}>
-                <Text style={styles.title}>Activity Feed</Text>
-                <View style={styles.statSection}>
-                    <FontAwesome style={styles.sectionIcon} name="flag-o" size={18} color="white"/>
-                    <Text style={styles.text}>Miles</Text>
+            <View style={styles.subContainer}>
+                <View style={styles.header}>
+                    <Text style={styles.title}>Activity</Text>
+                    <Image source={{ uri: profileImageUrl }} style={styles.topProfile}/>
                 </View>
-                <View style={styles.statSection}>
-                    <MaterialCommunityIcons style={styles.sectionIcon} name="calendar-clock-outline" color="white" size={18}/>
-                    <Text style={styles.text}>Nov 25 - Dec 17 {"(22 days)"}</Text>
-                </View>
-                <View style={styles.statSection}>
-                    <MaterialCommunityIcons style={styles.sectionIcon} name="account-group-outline" color="white" size={18}/>
-                    <Text style={styles.text}>3 joined</Text>
-                </View>
-            </View>
-            <View style={styles.leaderboard}>
-                <View style={styles.leaderboardSectionHeader}>
-                    <Text style={styles.leaderboardHeaderText}>Leaderboard</Text>
-                </View>
-                <View style={styles.leaderboardSection}>
-                    <View style={styles.leaderboardSectionContainer}>
-                        <View style={styles.leaderboardFirstPerson}>
-                            {/* <Image></Image> */}
-                            <MaterialCommunityIcons style={styles.sectionIcon} name="account-group-outline" color="white" size={18}/>
+                <View style={styles.activityFeed}>
+                    <View style={styles.postSection}>
+                        <View style={styles.profileBar}>
+                            <Image source={{ uri: profileImageUrl }} style={styles.profile}/>
                             <View>
-                                <Text style={styles.text}>1. Xinyue Ma</Text>
-                                <View style={styles.leaderboardPersonMetric}>
-                                    <View style={styles.progressBar}></View>
-                                    <Text style={styles.smallText}>57.7 miles</Text>
+                                <Text style={styles.text}>Sarah Liang</Text>
+                                <Text style={{color: "white", fontSize: 10}}>Today 3:53</Text>
+                            </View>
+                            <MaterialCommunityIcons style={styles.arrowIcon} name="chevron-right" color="white" size={25}/>
+                        </View>
+                        <View style={styles.post}>
+                            <View style={styles.column}>
+                                <View style={styles.postInfoSection}>
+                                    <View style={styles.caption}>
+                                        <FontAwesome style={styles.sectionIcon} name="flag-o" size={18} color="white"/>
+                                        <Text style={styles.text}>2 hours of coding!!!</Text>
+                                    </View>
+                                    <View style={styles.engagementButtons}>
+                                        {/* heart, comments */}
+                                        <Pressable onPress={() => setLiked((isLiked) => !isLiked)}>
+                                            <MaterialCommunityIcons
+                                                name={liked ? "heart" : "heart-outline"}
+                                                size={26}
+                                                color={liked ? "#EB5050" : "white"}
+                                            />
+                                            <Text style={{color: "white", fontSize: 13}}>Comment...</Text>
+                                        </Pressable>
+                                    </View>
                                 </View>
                             </View>
-                        </View>
-                        <View style={styles.leaderboardPerson}>
-                            {/* <Image></Image> */}
-                            <MaterialCommunityIcons style={styles.sectionIcon} name="account-group-outline" color="white" size={18}/>
-                            <View>
-                                <Text style={styles.text}>2. Sophia Park</Text>
-                                <View style={styles.leaderboardPersonMetric}>
-                                    <View style={styles.progressBar2}></View>
-                                    <Text style={styles.smallText}>45.6 miles</Text>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={styles.leaderboardPerson}>
-                            {/* <Image></Image> */}
-                            <MaterialCommunityIcons style={styles.sectionIcon} name="account-group-outline" color="white" size={18}/>
-                            <View>
-                                <Text style={styles.text}>3. Wilson Lim</Text>
-                                <View style={styles.leaderboardPersonMetric}>
-                                    <View style={styles.progressBar3}></View>
-                                    <Text style={styles.smallText}>43.6 miles</Text>
+                            <View style={styles.column}>
+                                <View style={styles.imageContainer}>
+                                    <Image style={styles.img} source={require('../assets/randomGirl.png')} />
                                 </View>
                             </View>
                         </View>
                     </View>
-                </View>
-            </View>
-            <View style={styles.activitySection}>
-                <Text style={styles.activitySectionTitle}>Activity Log</Text>
-                <View style={styles.subactivitySection}>
-                    <View style={styles.post}>
-                        <MaterialCommunityIcons style={styles.posterIcon} name="account-group-outline" color="white" size={18}/>
-                        <View style={styles.postContentContainer}>
-                            <View style={styles.posterInfo}>
-                                <Text style={styles.smallText}>1. Xinyue Ma | </Text>
-                                <Text style={styles.smallText}>11/12/22 3:32 pm</Text>
+                    <View style={styles.postSection}>
+                        <View style={styles.profileBar}>
+                            <Image source={{ uri: profileImageUrl }} style={styles.profile}/>
+                            <View>
+                                <Text style={styles.text}>Wilson Lim Setiawan</Text>
+                                <Text style={{color: "white", fontSize: 10}}>Yesterday 2:03pm</Text>
                             </View>
-                            <View style={styles.postImageContainer}>
-                                {/* IMG HERE */}
+                            <MaterialCommunityIcons style={styles.arrowIcon} name="chevron-right" color="white" size={25}/>
+                        </View>
+                        <View style={styles.post}>
+                            <View style={styles.column}>
+                                <View style={styles.postInfoSection}>
+                                    <View style={styles.caption}>
+                                        <FontAwesome style={styles.sectionIcon} name="flag-o" size={18} color="white"/>
+                                        <Text style={styles.text}>34 pgs read</Text>
+                                    </View>
+                                    <View style={styles.engagementButtons}>
+                                        {/* heart, comments */}
+                                        <Pressable onPress={() => setLiked((isLiked) => !isLiked)}>
+                                            <MaterialCommunityIcons
+                                                name={liked ? "heart" : "heart-outline"}
+                                                size={26}
+                                                color={liked ? "#EB5050" : "white"}
+                                            />
+                                            <Text style={{color: "white", fontSize: 13}}>Comment...</Text>
+                                        </Pressable>
+                                    </View>
+                                </View>
+                            </View>
+                            <View style={styles.column}>
+                                <View style={styles.imageContainer}>
+                                    <Image style={styles.img} source={require('../assets/randomGirl.png')} />
+                                </View>
                             </View>
                         </View>
                     </View>
+                    
+                    
                 </View>
             </View>
-    
         </View>
     );
   }
@@ -96,20 +140,36 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.darkGray,
-        // paddingLeft: 18
+        paddingTop: 30,
     },
-    statsSection: {
+    subContainer: {
         marginTop: "5%",
         paddingLeft: 18
     },
-    statSection: {
+    postSection: {
+        marginBottom: 15,
+    },
+    postInfoSection: {
+        // flexBasis: 100,
+        // alignContent: "space-between",
+        width: 120,
+        height: 230,
+    },
+    post: {
         display: "flex",
         flexDirection: "row",
         paddingLeft: 5,
         marginBottom: "1%",
     },
     sectionIcon: {
-        marginRight: "3%",
+        marginRight: "4.5%",
+    },
+    arrowIcon: {
+        marginRight: 25,
+        marginLeft: "auto"
+    },
+    header: {
+        flexDirection: "row"
     },
     title: {
         fontSize: 21,
@@ -122,127 +182,44 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginBottom: 3,
     },
-    leaderboard: {
-        position: "relative",
-        paddingLeft: 18
+    activityFeed: {
+        marginTop: 15
     },
-    leaderboardSectionHeader: {
-        backgroundColor: "#70A1B7",
-        width: 114,
-        height: 32,
-        borderRadius: 5,
-        position: "absolute",
-        top: 15,
-        alignItems: "center",
-        justifyContent: "center",
-        marginLeft: 30,
+    topProfile: {
+        width: 24,
+        height: 24,
+        marginLeft: 10,
+        borderRadius: "50%",
+        marginLeft: "auto",
+        marginRight: 30
     },
-    leaderboardHeaderText: {
-        fontSize: 16,
-        fontWeight: "400",
-        color: "white"
+    profile: {
+        width: 28,
+        height: 28,
+        borderRadius: "50%",
+        marginRight: 10,
     },
-    leaderboardSection: {
-        backgroundColor: "#616f74",
-        width: 335,
-        height: 177,
-        borderRadius: 10,
-        zIndex: -5,
-        marginTop: 30,
-        justifyContent: "center",
-        paddingLeft: 15,
-    },
-    leaderboardSectionContainer: {
-        
-    },
-    leaderboardFirstPerson: {
+    profileBar: {
         flexDirection: "row",
         alignItems: "center",
+        marginBottom: 25
     },
-    leaderboardPerson: {
+    caption: {
         flexDirection: "row",
-        alignItems: "center",
-        marginTop: 12,
     },
-    leaderboardPersonMetric: {
+    engagementButtons: {
         flexDirection: "row",
-        alignItems: "center",
+        marginTop: "auto"
     },
-    progressBar: {
-        width: 30,
-        borderRadius: 2,
-        backgroundColor: colors.primary,
-        height: 6,
-        marginRight: 6,
-    },
-    progressBar2: {
-        width: 22,
-        borderRadius: 2,
-        backgroundColor: colors.primary,
-        height: 6,
-        marginRight: 6,
-    },
-    progressBar3: {
-        width: 20,
-        borderRadius: 2,
-        backgroundColor: colors.primary,
-        height: 6,
-        marginRight: 6,
-    },
-    smallText: {
-        fontSize: 10,
-        color: "white"
-    },
-    activitySection: {
-        marginTop: 16,
-    },
-    activitySectionTitle: {
-        fontSize: 16,
-        fontWeight:"500",
-        color: "white",
-        paddingLeft: 18
-    },
-    subactivitySection: {
-        alignItems: "center",
-    },
-    post: {
-        marginTop: 10,
-    },
-    posterInfo: {
-        flexDirection: "row",
-        marginBottom: 8,
-    },
-    postImageContainer: {
-        width: 253, 
-        height: 175,
-        // when image is bigger than specified dimensions, it will be cutoff
+    imageContainer: {
+        width: 235,
+        height: 235,
         overflow: "hidden",
-        backgroundColor: colors.primary,
-
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
+        borderRadius: 10,
+        // flexBasis: "auto",
+        // alignContent: "space-between",
     },
-    posterIcon: {
-        position: 'absolute',
-        left: -35,
-    },
-    postContentContainer: {
-        position: "relative"
-    },
-    logProgressButton:{
-      marginRight:"5%",
-      marginLeft:"5%",
-      paddingTop:18,
-      paddingBottom:18,
-      backgroundColor:'white',
-      borderRadius:10,
-    },
-    logProgressText:{
-        color:'#605F5F',
-        fontSize: 18,
-        fontWeight: "500",
-        textAlign:'center',
-        paddingLeft : 10,
-        paddingRight : 10
+    img: {
+        borderRadius: 10,
     }
 });
