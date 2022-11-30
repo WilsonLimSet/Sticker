@@ -51,9 +51,6 @@ export default function EditProfile() {
           value={name}
           onChangeText={(text) => setName(text)}
         />
-      <TouchableOpacity style={styles.button} >
-        <Text style={{fontWeight: 'bold', color: 'black', fontSize: 18}}> Choose a new photo </Text>
-      </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={onHandleChanges} >
         <Text style={{fontWeight: 'bold', color: 'black', fontSize: 18}}> Save Changes</Text>
       </TouchableOpacity>

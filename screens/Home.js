@@ -34,6 +34,19 @@ const Home = () => {
         return unsubscribe;
     },[])
 
+    const navigationFunction = () => {
+        navigation.navigate('View Challenge');
+    }
+
+    const rememberTitle = (challengeTitle) => {
+        SetTitle(challengeTitle)
+    }
+    
+    const combined = (title) => {
+        navigationFunction();
+        rememberTitle(title);
+    }
+
     useLayoutEffect(() => {
         navigation.setOptions({
             title: "Dashboard",
@@ -83,14 +96,16 @@ const Home = () => {
                             value={isEnabled}
                         />
                     </View> */}
-                    <TouchableOpacity onPress={() => navigation.navigate('View Challenge')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('View Challenge')} >
                         <View style={styles.entry}>
                             <View style={styles.aboveFooter}>
                                 <View style={styles.circle}></View>
                                 <Image source={require('../assets/star-logo-simplified.png')} />
                             </View>
                             <View style={styles.footer}>
-                                <Text style={styles.title}>Drinking Water!!!!!!!!!!!!!</Text>
+                                <View style={styles.titleContainer}>
+                                    <Text style={styles.title}>Drinking Water</Text>
+                                </View>
                                 <View style={styles.profileBar}>
                                     {/* circle profile bar */}
                                 </View>
@@ -160,12 +175,14 @@ const Home = () => {
             flex: 1,
             justifyContent: "flex-end",
         },
+        // titleContainer: {
+        //     flex: 1
+        // },
         title: {
-            paddingLeft: 13,
+            paddingLeft: 10,
             marginBottom: 5,
             fontSize: 20,
             fontWeight: "400",
-            flexShrink: 1
         },
         subtitle: {
             paddingRight: 5,
