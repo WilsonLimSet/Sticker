@@ -19,6 +19,7 @@ import ViewChallenge from './screens/ViewChallenge';
 import EditProfile from './screens/EditProfile';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { faCircleChevronDown } from '@fortawesome/free-solid-svg-icons/faCircleChevronDown';
@@ -62,10 +63,10 @@ function HomeStack({ routeName }) {
                         <MaterialCommunityIcons name="plus-circle" color={color} size={26} />
                     ),
                 }} />
-            <Tab.Screen name="Stats" component={ActivityScreen}        // Search Screen
+            <Tab.Screen name="Stats" component={ActivityStack}        // Search Screen
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <MaterialCommunityIcons name="chart-box-outline" color={color} size={26} />
+                        <MaterialIcons name="dynamic-feed" color={color} size={26} />
                     ),
                 }} />
             <Tab.Screen name="Profile" component={ProfileStack}            // Profile Screen
@@ -99,6 +100,13 @@ function ExploreStack() {
     );
 }
 
+function ActivityStack() {
+    return(
+      <Stack.Navigator defaultScreenOptions={ActivityScreen}>
+        <Stack.Screen name='Activity' component={ActivityScreen} />
+      </Stack.Navigator>
+    );
+}
 
 
 function ProfileStack() {

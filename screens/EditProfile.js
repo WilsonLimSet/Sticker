@@ -40,7 +40,7 @@ export default function EditProfile() {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.form}>
-      <Text style={{fontWeight: 'bold', alignSelf: "center", color: 'white', fontSize: 18, marginTop: 23}}> Enter a new name </Text>
+      <Text style={{fontWeight: '500', alignSelf: "center", color: 'white', fontSize: 18, marginBottom: 10}}> Enter a new name </Text>
       <TextInput
           style={styles.input}
           placeholder="Enter a new name"
@@ -52,10 +52,10 @@ export default function EditProfile() {
           onChangeText={(text) => setName(text)}
         />
       <TouchableOpacity style={styles.button} >
-        <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 18}}> Choose a new photo </Text>
+        <Text style={{fontWeight: 'bold', color: 'black', fontSize: 18}}> Choose a new photo </Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={onHandleChanges} >
-        <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 18}}> Save Changes</Text>
+        <Text style={{fontWeight: 'bold', color: 'black', fontSize: 18}}> Save Changes</Text>
       </TouchableOpacity>
       </SafeAreaView>
       <StatusBar barStyle="light-content" />
@@ -109,6 +109,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 40,
+    marginTop: 25,
   },
 });

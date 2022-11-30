@@ -71,9 +71,9 @@ const Home = () => {
         <View style={styles.container}>
             <ScrollView contentContainerStyle={{paddingBottom: 100}}>
 
-           
+            <View style={styles.row}>
                 <View style={styles.column}>
-                    <View style={styles.toggle}>
+                    {/* <View style={styles.toggle}>
                         <Text style={styles.subtitle}>Show active Challenges</Text>
                         <Switch
                             trackColor={{ false: colors.darkGray, true: "#70A1B7" }}
@@ -82,9 +82,7 @@ const Home = () => {
                             onValueChange={toggleSwitch}
                             value={isEnabled}
                         />
-                    </View>
-                    
-                    
+                    </View> */}
                     <TouchableOpacity onPress={() => navigation.navigate('View Challenge')}>
                         <View style={styles.entry}>
                             <View style={styles.aboveFooter}>
@@ -92,18 +90,16 @@ const Home = () => {
                                 <Image source={require('../assets/star-logo-simplified.png')} />
                             </View>
                             <View style={styles.footer}>
-                                <Text style={styles.title}>Drinking Water</Text>
+                                <Text style={styles.title}>Drinking Water!!!!!!!!!!!!!</Text>
                                 <View style={styles.profileBar}>
                                     {/* circle profile bar */}
                                 </View>
                             </View>
                         </View>
                     </TouchableOpacity>
-                   
-                
                 </View>
                 {products.map(product => <Created key={product.name} {...product} />)}
-           
+            </View>
             </ScrollView>
         </View>
     );
@@ -123,6 +119,7 @@ const Home = () => {
             display: "flex",
             flexDirection: "row-reverse",
             justifyContent: "center",
+            flexWrap: "wrap"
         },
         column: {
             flex: "0%",
@@ -168,6 +165,7 @@ const Home = () => {
             marginBottom: 5,
             fontSize: 20,
             fontWeight: "400",
+            flexShrink: 1
         },
         subtitle: {
             paddingRight: 5,

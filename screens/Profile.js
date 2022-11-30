@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.darkGray,
   },
   subContainer: {
-    height: 600,
+    height: 690,
     justifyContent: "center",
   },
   userImgContainer: {

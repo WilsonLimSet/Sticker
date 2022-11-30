@@ -51,17 +51,6 @@ export default function ExploreChallenges() {
                 // <FontAwesome name="bars" size={24} color="white" style={{marginLeft: 15}}/>
                 null
             ),
-            headerRight: () => (
-                <Image
-                    source={{ uri: profileImageUrl }}
-                    style={{
-                        width: 40,
-                        height: 40,
-                        marginRight: 15,
-                        borderRadius: "50%"
-                    }}
-                />
-            ),
         });
         return unsubscribe;
     }, []);
