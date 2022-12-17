@@ -73,7 +73,7 @@ const Home = () => {
                         width: 40,
                         height: 40,
                         marginRight: 15,
-                        borderRadius: "50%"
+                        borderRadius: 50
                     }}
                 />
             ),
@@ -136,9 +136,6 @@ const Home = () => {
             justifyContent: "center",
             flexWrap: "wrap"
         },
-        column: {
-            flex: "0%",
-        },
         toggle: {
             backgroundColor: colors.lightGray,
             height: 71,
@@ -168,7 +165,7 @@ const Home = () => {
             height: 100,
             borderWidth: 6,
             borderColor: "#c0e1ef",
-            borderRadius: "50%",
+            borderRadius: 50,
             position: "absolute",
         },
         footer: {
@@ -202,6 +199,6 @@ const Home = () => {
             width: 24,
             height: 24,
             marginLeft: 10,
-            borderRadius: "50%"
+            borderRadius: 50
         }
     });

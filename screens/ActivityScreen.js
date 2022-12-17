@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     profile: {
         width: 28,
         height: 28,
-        borderRadius: "50%",
+        borderRadius: 50,
         marginRight: 10,
     },
     profileBar: {

@@ -56,9 +56,6 @@ const styles = StyleSheet.create({
         flexDirection: "row-reverse",
         justifyContent: "center",
     },
-    column: {
-        flex: "0%",
-    },
     toggle: {
         backgroundColor: colors.lightGray,
         height: 71,
@@ -88,7 +85,7 @@ const styles = StyleSheet.create({
         height: 100,
         borderWidth: 6,
         borderColor: "#c0e1ef",
-        borderRadius: "50%",
+        borderRadius: 50,
         position: "absolute",
     },
     footer: {
@@ -119,6 +116,6 @@ const styles = StyleSheet.create({
         width: 24,
         height: 24,
         marginLeft: 10,
-        borderRadius: "50%"
+        borderRadius: 50
     }
 });

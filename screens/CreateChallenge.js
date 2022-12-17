@@ -233,9 +233,6 @@ export default function CreateChallenge({ navigation }) {
         flexDirection: "row-reverse",
         justifyContent: "center",
     },
-    column: {
-        flex: "0%",
-    },
     naming: {
       backgroundColor: "white",
       height: 264,
