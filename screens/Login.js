@@ -56,6 +56,7 @@ export default function Login({ navigation }) {
         <AuthInput
           name="email"
           placeholder="Email"
+          placeholderTextColor="#696969"
           control={control}
           keyboardType="email-address"
           secureTextEntry={false}
@@ -69,6 +70,7 @@ export default function Login({ navigation }) {
         <AuthInput
           name="password"
           placeholder="Password"
+          placeholderTextColor="#696969"
           control={control}
           keyboardType="default"
           secureTextEntry={true}

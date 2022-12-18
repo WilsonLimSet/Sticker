@@ -7,6 +7,7 @@ const AuthInput = ({
   name,
   rules = {},
   placeholder,
+  placeholderTextColor,
   secureTextEntry,
   autoCapitalize,
   keyboardType,
@@ -34,6 +35,7 @@ const AuthInput = ({
               },
             ]}
             placeholder={placeholder}
+            placeholderTextColor={placeholderTextColor}
             secureTextEntry={secureTextEntry}
             autoCapitalize={autoCapitalize}
             keyboardType={keyboardType}

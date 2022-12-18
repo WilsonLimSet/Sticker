@@ -93,6 +93,7 @@ export default function Signup({ navigation }) {
         <AuthInput
           name="fullname"
           placeholder="Full Name"
+          placeholderTextColor="#696969"
           control={control}
           keyboardType="default"
           secureTextEntry={false}
@@ -103,6 +104,7 @@ export default function Signup({ navigation }) {
         <AuthInput
           name="username"
           placeholder="Username"
+          placeholderTextColor="#696969"
           control={control}
           keyboardType="default"
           secureTextEntry={false}
@@ -123,12 +125,13 @@ export default function Signup({ navigation }) {
         <AuthInput
           name="email"
           placeholder="Email"
+          placeholderTextColor="#696969"
           control={control}
           keyboardType="email-address"
           secureTextEntry={false}
           autoCapitalize="none"
           rules={{
-            required: true,
+            required: "Email is required",
             pattern: { value: EMAIL_REGEX, message: "Email in invalid" },
           }}
         />
@@ -136,6 +139,7 @@ export default function Signup({ navigation }) {
         <AuthInput
           name="password"
           placeholder="Password"
+          placeholderTextColor="#696969"
           control={control}
           keyboardType="default"
           secureTextEntry={true}
