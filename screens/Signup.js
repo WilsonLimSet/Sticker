@@ -1,73 +1,180 @@
-import React, { useState } from 'react';
-import { collection, doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, getDocs, where, query, Firestore,  } from "firebase/firestore"; 
-import { StyleSheet, Text, View, Button, TextInput, Image, SafeAreaView, TouchableOpacity, StatusBar, Alert } from "react-native";
-import { createUserWithEmailAndPassword,updateProfile } from 'firebase/auth';
-import { auth } from '../config/firebase';
-import {database} from '../config/firebase';
-import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
+import React, { useState } from "react";
+import {
+  collection,
+  doc,
+  setDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  getDoc,
+  getDocs,
+  where,
+  query,
+  Firestore,
+} from "firebase/firestore";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  TextInput,
+  Image,
+  SafeAreaView,
+  TouchableOpacity,
+  StatusBar,
+  Alert,
+} from "react-native";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../config/firebase";
+import { database } from "../config/firebase";
+import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 const backImage = require("../assets/backImage.jpg");
-import colors from '../colors';
+import colors from "../colors";
+import { useForm, Controller } from "react-hook-form";
+import AuthInput from "../components/auth/AuthInput";
+
+const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 export default function Signup({ navigation }) {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  console.log(errors);
 
+  const errorAlert = (error) =>
+    Alert.alert("Sign Up Error", error.message, [
+      { text: "OK", onPress: () => console.log("OK Pressed") },
+    ]);
 
-  const onHandleSignup = async () => {
-    const { user } = await createUserWithEmailAndPassword(auth, email, password)
-    await updateProfile(user,{
-      displayName:email.split('@')[0].split('.')[0] ,
-      photoURL: 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png',
+  const onHandleSignup = async (data) => {
+    const { user } = await createUserWithEmailAndPassword(
+      auth,
+      data.email,
+      data.password
+    );
+    await updateProfile(user, {
+      displayName: data.fullname,
+      photoURL:
+        "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png",
     });
-    await setDoc(doc(database, "users", user.uid), 
-    { displayName:email.split('@')[0].split('.')[0] 
-    ,email: user.email
-    ,photoURL: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"}) 
+    await setDoc(doc(database, "users", user.uid), {
+      username: data.username,
+    });
     await user.reload();
-    // await user?.updateDisplayName("Jane Q. User");
-    // await user?.updatePhotoURL("https://example.com/jane-q-user/profile.jpg");
-    console.log('Document Added') 
-  }     
+    console.log("Document Added");
 
-  
+    console.log(data);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.imgContainer}>
-        <Image source={require('../assets/sticker-logo.png')} style={styles.backImage} />
-        <Text style={{fontSize: 20, fontWeight: "400", marginBottom: 15, color: "white"}}>Welcome to Sticker</Text>
+        <Image
+          source={require("../assets/sticker-logo.png")}
+          style={styles.backImage}
+        />
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "400",
+            marginBottom: 15,
+            color: "white",
+          }}
+        >
+          Welcome to Sticker
+        </Text>
       </View>
       <SafeAreaView style={styles.form}>
         <Text style={styles.title}>Sign Up</Text>
-         <TextInput
-        style={styles.input}
-        placeholder="Enter email"
-        autoCapitalize="none"
-        keyboardType="email-address"
-        textContentType="emailAddress"
-        autoFocus={true}
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Enter password"
-        autoCapitalize="none"
-        autoCorrect={false}
-        secureTextEntry={true}
-        textContentType="password"
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-      />
-      <TouchableOpacity style={styles.button} onPress={onHandleSignup}>
-        <Text style={{fontWeight: 'bold', color: 'black', fontSize: 18}}> Sign Up</Text>
-      </TouchableOpacity>
-      <View style={{marginTop: 20, flexDirection: 'row', alignItems: 'center', alignSelf: 'center'}}>
-        <Text style={{color: 'gray', fontWeight: '600', fontSize: 14}}>Don't have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-          <Text style={{color: '#B8DCEA', fontWeight: '600', fontSize: 14}}> Log In</Text>
+
+        <AuthInput
+          name="fullname"
+          placeholder="Full Name"
+          control={control}
+          keyboardType="default"
+          secureTextEntry={false}
+          autoCapitalize="none"
+          rules={{ required: "Full Name is required" }}
+        />
+
+        <AuthInput
+          name="username"
+          placeholder="Username"
+          control={control}
+          keyboardType="default"
+          secureTextEntry={false}
+          autoCapitalize="none"
+          rules={{
+            required: "Username is required",
+            minLength: {
+              value: 3,
+              message: "Username must be more than 2 characters",
+            },
+            maxLength: {
+              value: 20,
+              message: "Username must be less than 20 characters",
+            },
+          }}
+        />
+
+        <AuthInput
+          name="email"
+          placeholder="Email"
+          control={control}
+          keyboardType="email-address"
+          secureTextEntry={false}
+          autoCapitalize="none"
+          rules={{
+            required: true,
+            pattern: { value: EMAIL_REGEX, message: "Email in invalid" },
+          }}
+        />
+
+        <AuthInput
+          name="password"
+          placeholder="Password"
+          control={control}
+          keyboardType="default"
+          secureTextEntry={true}
+          autoCapitalize="none"
+          rules={{
+            required: "Password is required",
+            minLength: {
+              value: 8,
+              message: "Password must be more than 7 characters",
+            },
+          }}
+        />
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleSubmit(onHandleSignup)}
+        >
+          <Text style={{ fontWeight: "bold", color: "black", fontSize: 18 }}>
+            {" "}
+            Sign Up
+          </Text>
         </TouchableOpacity>
-      </View>
+        <View
+          style={{
+            marginTop: 20,
+            flexDirection: "row",
+            alignItems: "center",
+            alignSelf: "center",
+          }}
+        >
+          <Text style={{ color: "gray", fontWeight: "600", fontSize: 14 }}>
+            Don't have an account?{" "}
+          </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <Text style={{ color: "#B8DCEA", fontWeight: "600", fontSize: 14 }}>
+              Log In
+            </Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
       <StatusBar barStyle="light-content" />
     </View>
@@ -83,30 +190,20 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontWeight: '700',
+    fontWeight: "700",
     color: "white",
     alignSelf: "center",
-    paddingBottom: 24,
-  },
-  input: {
-    backgroundColor: "#F6F7FB",
-    height: 58,
-    marginBottom: 20,
-    fontSize: 16,
-    borderRadius: 10,
-    padding: 12,
-  },
-  backImage: {
+    paddingBottom: 14,
   },
   form: {
     marginHorizontal: 30,
   },
   button: {
-    backgroundColor: '#B8DCEA',
+    backgroundColor: "#B8DCEA",
     height: 58,
     borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 40,
   },
 });
