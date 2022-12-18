@@ -1,60 +1,118 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Button, TextInput, Image, SafeAreaView, TouchableOpacity, StatusBar, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  TextInput,
+  Image,
+  SafeAreaView,
+  TouchableOpacity,
+  StatusBar,
+  Alert,
+} from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
 const backImage = require("../assets/backImage.jpg");
-import colors from '../colors';
+import colors from "../colors";
+import { useForm, Controller } from "react-hook-form";
+import AuthInput from "../components/auth/AuthInput";
+
+const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 export default function Login({ navigation }) {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const onHandleLogin = () => {
-    if (email !== "" && password !== "") {
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => console.log("Login success"))
-        .catch((err) => Alert.alert("Login error", err.message));
-    }
+  const onHandleLogin = (data) => {
+    signInWithEmailAndPassword(auth, data.email, data.password)
+      .then(() => console.log("Login success"))
+      .catch((err) => Alert.alert("Login error", err.message));
   };
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.imgContainer}>
-        <Image source={require('../assets/sticker-logo.png')} style={styles.backImage} />
-        <Text style={{fontSize: 20, fontWeight: "400", marginBottom: 15, color: "white"}}>Welcome to Sticker</Text>
+        <Image
+          source={require("../assets/sticker-logo.png")}
+          style={styles.backImage}
+        />
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "400",
+            marginBottom: 15,
+            color: "white",
+          }}
+        >
+          Welcome to Sticker
+        </Text>
       </View>
       <SafeAreaView style={styles.form}>
         <Text style={styles.title}>Log In</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter email"
-          autoCapitalize="none"
+        <AuthInput
+          name="email"
+          placeholder="Email"
+          placeholderTextColor="#696969"
+          control={control}
           keyboardType="email-address"
-          textContentType="emailAddress"
-          autoFocus={true}
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Enter password"
+          secureTextEntry={false}
           autoCapitalize="none"
-          autoCorrect={false}
-          secureTextEntry={true}
-          textContentType="password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
+          rules={{
+            required: true,
+            pattern: { value: EMAIL_REGEX, message: "Email in invalid" },
+          }}
         />
-      <TouchableOpacity style={styles.button} onPress={onHandleLogin}>
-        <Text style={{fontWeight: 'bold', color: 'black', fontSize: 18}}> Log In</Text>
-      </TouchableOpacity>
-      <View style={{marginTop: 20, flexDirection: 'row', alignItems: 'center', alignSelf: 'center'}}>
-        <Text style={{color: colors.lightGray, fontWeight: '600', fontSize: 14}}>Don't have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
-          <Text style={{color: colors.primary, fontWeight: '600', fontSize: 14}}> Sign Up</Text>
+
+        <AuthInput
+          name="password"
+          placeholder="Password"
+          placeholderTextColor="#696969"
+          control={control}
+          keyboardType="default"
+          secureTextEntry={true}
+          autoCapitalize="none"
+          rules={{
+            required: "Password is required",
+            minLength: {
+              value: 8,
+              message: "Password must be more than 7 characters",
+            },
+          }}
+        />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleSubmit(onHandleLogin)}
+        >
+          <Text style={{ fontWeight: "bold", color: "black", fontSize: 18 }}>
+            {" "}
+            Log In
+          </Text>
         </TouchableOpacity>
-      </View>
+        <View
+          style={{
+            marginTop: 20,
+            flexDirection: "row",
+            alignItems: "center",
+            alignSelf: "center",
+          }}
+        >
+          <Text
+            style={{ color: colors.lightGray, fontWeight: "600", fontSize: 14 }}
+          >
+            Don't have an account?{" "}
+          </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+            <Text
+              style={{ color: colors.primary, fontWeight: "600", fontSize: 14 }}
+            >
+              Sign Up
+            </Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
       <StatusBar barStyle="light-content" />
     </View>
@@ -70,7 +128,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontWeight: '700',
+    fontWeight: "700",
     color: "white",
     alignSelf: "center",
     paddingBottom: 24,
@@ -83,17 +141,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 12,
   },
-  backImage: {
-  },
+  backImage: {},
   form: {
     marginHorizontal: 30,
   },
   button: {
-    backgroundColor: '#B8DCEA',
+    backgroundColor: "#B8DCEA",
     height: 58,
     borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 40,
   },
 });
