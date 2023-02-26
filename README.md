@@ -1,22 +1,5 @@
-```
-cd Sticker && yarn
-```
-
-Add your firebase backend config in the `firebase.js` file
-```
-const firebaseConfig = {
-  apiKey: Constants.manifest.extra.apiKey,
-  authDomain: Constants.manifest.extra.authDomain,
-  projectId: Constants.manifest.extra.projectId,
-  storageBucket: Constants.manifest.extra.storageBucket,
-  messagingSenderId: Constants.manifest.extra.messagingSenderId,
-  appId: Constants.manifest.extra.appId,
-  databaseURL: Constants.manifest.extra.databaseURL
-};
-```
-
-Run the project
-```
-expo start
-`
-
+1. Git Clone
+2. CD into Sticker
+3. yarn
+4. create .env file and copy paste from email
+5. expo start 
