@@ -13,11 +13,7 @@ export default function ViewChallenge({ navigation }) {
     
     return (
         <View style={styles.container}>
-            {/* <Text>plus screen</Text> */}
-            {/* <Button
-            title="Go to stackScreen2"
-            onPress={() => navigation.navigate('stackScreen2')}
-            /> */}
+           
 
             <View style={styles.statsSection}>
                 <Text style={styles.title}>Running</Text>
@@ -96,6 +92,12 @@ export default function ViewChallenge({ navigation }) {
                 onPress={() => navigation.navigate('Log Progress')}
                 underlayColor='#fff'>
                 <Text style={styles.logProgressText}>Log Progress</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+            style={styles.button}
+            onPress={handleDeleteChallenge}
+            underlayColor='#fff'>
+            <Text style={styles.buttonText}>Delete Challenge</Text>
             </TouchableOpacity>
         </View>
     );
