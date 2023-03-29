@@ -8,7 +8,7 @@ import { Camera, CameraType } from 'expo-camera';
 import * as MedicaLibrary from 'expo-media-library';
 import Login from './screens/Login';
 import Signup from './screens/Signup';
-import Home from './screens/Home';
+import Home from './screens/HomeScreen';
 import TakePhoto from './screens/TakePhoto';
 import ExploreChallenges from './screens/ExploreChallenges';
 import Profile from './screens/Profile';
@@ -25,6 +25,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 import { faCircleChevronDown } from '@fortawesome/free-solid-svg-icons/faCircleChevronDown';
 import colors from './colors';
 import Sample from './components/Sample';
+import DeleteChallenge from './screens/DeleteChallenge';
 library.add(fab, faCircleChevronDown)
 
 const Tab = createMaterialBottomTabNavigator();
@@ -87,6 +88,7 @@ function ChallengeStack() {
             <Stack.Screen name='View Challenge' component={ViewChallenge} />
             <Stack.Screen name='Log Progress' component={LogProgress} />
             <Stack.Screen name='Take Photo' component={TakePhoto} />
+            <Stack.Screen name='Delete Challenge' component={DeleteChallenge} />
         </Stack.Navigator>
     );
 }

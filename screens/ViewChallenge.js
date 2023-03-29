@@ -1,5 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
-import { React, useState, useCallback } from 'react'
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { React, useState, useCallback, useEffect } from 'react'
 import { View, Text, StyleSheet, TextInput, Image } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import * as Clipboard from 'expo-clipboard';
@@ -7,99 +7,53 @@ import colors from '../colors';
 import { FontAwesome } from '@expo/vector-icons';
 import  MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { doc, getDoc,deleteDoc } from 'firebase/firestore';
+import { database } from '../config/firebase';
+
+export default function ViewChallenge({ route }) {
+  const [challengeId, setChallengeId] = useState(null);
+  const navigation = useNavigation(); // add this line to get navigation object
+
+  useEffect(() => {
+    const { id } = route.params;
+    console.log(id);
+    const fetchChallenge = async () => {
+      try {
+        const challengeDocRef = doc(database, 'userChallenges', id);
+        const challengeDoc = await getDoc(challengeDocRef);
+        if (challengeDoc.exists()) {
+          setChallengeId(id);
+          
+        } else {
+          console.log('No challenge document found');
+        }
+      } catch (error) {
+        console.log('Error fetching challenge:', error);
+      }
+    };
+    fetchChallenge();
+  }, []);
 
 
-export default function ViewChallenge({ navigation }) {
-    
-    return (
-        <View style={styles.container}>
-            {/* <Text>plus screen</Text> */}
-            {/* <Button
-            title="Go to stackScreen2"
-            onPress={() => navigation.navigate('stackScreen2')}
-            /> */}
-
-            <View style={styles.statsSection}>
-                <Text style={styles.title}>Running</Text>
-                <View style={styles.statSection}>
-                    <FontAwesome style={styles.sectionIcon} name="flag-o" size={18} color="white"/>
-                    <Text style={styles.text}>Miles</Text>
-                </View>
-                <View style={styles.statSection}>
-                    <MaterialCommunityIcons style={styles.sectionIcon} name="calendar-clock-outline" color="white" size={18}/>
-                    <Text style={styles.text}>Nov 25 - Dec 17 {"(22 days)"}</Text>
-                </View>
-                <View style={styles.statSection}>
-                    <MaterialCommunityIcons style={styles.sectionIcon} name="account-group-outline" color="white" size={18}/>
-                    <Text style={styles.text}>3 joined</Text>
-                </View>
-            </View>
-            <View style={styles.leaderboard}>
-                <View style={styles.leaderboardSectionHeader}>
-                    <Text style={styles.leaderboardHeaderText}>Leaderboard</Text>
-                </View>
-                <View style={styles.leaderboardSection}>
-                    <View>
-                        <View style={styles.leaderboardFirstPerson}>
-                            {/* <Image></Image> */}
-                            <MaterialCommunityIcons style={styles.sectionIcon} name="account-group-outline" color="white" size={18}/>
-                            <View>
-                                <Text style={styles.text}>1. Xinyue Ma</Text>
-                                <View style={styles.leaderboardPersonMetric}>
-                                    <View style={styles.progressBar}></View>
-                                    <Text style={styles.smallText}>57.7 miles</Text>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={styles.leaderboardPerson}>
-                            {/* <Image></Image> */}
-                            <MaterialCommunityIcons style={styles.sectionIcon} name="account-group-outline" color="white" size={18}/>
-                            <View>
-                                <Text style={styles.text}>2. Sophia Park</Text>
-                                <View style={styles.leaderboardPersonMetric}>
-                                    <View style={styles.progressBar2}></View>
-                                    <Text style={styles.smallText}>45.6 miles</Text>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={styles.leaderboardPerson}>
-                            {/* <Image></Image> */}
-                            <MaterialCommunityIcons style={styles.sectionIcon} name="account-group-outline" color="white" size={18}/>
-                            <View>
-                                <Text style={styles.text}>3. Wilson Lim</Text>
-                                <View style={styles.leaderboardPersonMetric}>
-                                    <View style={styles.progressBar3}></View>
-                                    <Text style={styles.smallText}>43.6 miles</Text>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-            </View>
-            <View style={styles.activitySection}>
-                <Text style={styles.activitySectionTitle}>Activity Log</Text>
-                <View style={styles.subactivitySection}>
-                    <View style={styles.post}>
-                        <MaterialCommunityIcons style={styles.posterIcon} name="account-group-outline" color="white" size={18}/>
-                        <View style={styles.postContentContainer}>
-                            <View style={styles.posterInfo}>
-                                <Text style={styles.smallText}>1. Xinyue Ma | </Text>
-                                <Text style={styles.smallText}>11/12/22 3:32 pm</Text>
-                            </View>
-                            <Image style={styles.postImageContainer} source={require('../assets/randomGirl.png')} />
-                        </View>
-                    </View>
-                </View>
-            </View>
-            <TouchableOpacity
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity
                 style={styles.logProgressButton}
                 onPress={() => navigation.navigate('Log Progress')}
                 underlayColor='#fff'>
                 <Text style={styles.logProgressText}>Log Progress</Text>
             </TouchableOpacity>
-        </View>
-    );
-  }
+      <TouchableOpacity
+        style={styles.deleteChallengeButton}
+        
+        onPress={() => navigation.navigate('Delete Challenge', { id:challengeId })}
+        underlayColor='#fff'>
+            
+        <Text style={styles.deleteChallengeText}>Delete Challenge</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
 
 
 
@@ -109,10 +63,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.darkGray,
         // paddingLeft: 18
     },
-    statsSection: {
-        marginTop: "5%",
-        paddingLeft: 18
-    },
+
     statSection: {
         display: "flex",
         flexDirection: "row",
@@ -242,6 +193,22 @@ const styles = StyleSheet.create({
       paddingBottom:18,
       backgroundColor:'white',
       borderRadius:10,
+    },
+    deleteChallengeButton:{
+        marginRight:"5%",
+        marginLeft:"5%",
+        paddingTop:18,
+        paddingBottom:18,
+        backgroundColor:'white',
+        borderRadius:10,
+      },
+      deleteChallengeText:{
+        color:'#605F5F',
+        fontSize: 18,
+        fontWeight: "500",
+        textAlign:'center',
+        paddingLeft : 10,
+        paddingRight : 10
     },
     logProgressText:{
         color:'#605F5F',
