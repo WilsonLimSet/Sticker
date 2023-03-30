@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Image, Alert} from 'react-native';
 import Constants from 'expo-constants';
 import { Camera, CameraType } from 'expo-camera';
-import * as MediaLibrary from 'expo-media-library';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import Button from '../components/Button'
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+
+
 export default function TakePhoto() {
   const navigation = useNavigation();
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
@@ -13,10 +16,11 @@ export default function TakePhoto() {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [flash, setFlash] = useState(Camera.Constants.FlashMode.off);
   const cameraRef = useRef(null);
+  
 
   useEffect(() => {
     (async () => {
-      MediaLibrary.requestPermissionsAsync();
+      
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
       setHasCameraPermission(cameraStatus.status === 'granted');
     })();
@@ -37,16 +41,76 @@ export default function TakePhoto() {
   const savePicture = async () => {
     if (image) {
       try {
-        const asset = await MediaLibrary.createAssetAsync(image);
-        alert('Picture saved! 🎉');
-        setImage(null);
-        navigation.navigate('Log Progress');
-        console.log('saved successfully');
+        // Generate a unique filename
+        const filename = `photo_${Date.now()}.jpg`;
+  
+        // Create a reference to the Firebase Storage location
+        const storageRef = ref(getStorage(), `images/${filename}`);
+  
+        // Get the blob from the image URL
+        const img = await fetch(image);
+        const blob = await img.blob();
+  
+        // Upload the image to Firebase Storage using uploadBytesResumable()
+        console.log("uploading image");
+        const uploadTask = uploadBytesResumable(storageRef, blob);
+  
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            // Get task progress
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
+            }
+          },
+          (error) => {
+            // Handle errors
+            switch (error.code) {
+              case "storage/unauthorized":
+                console.log("User doesn't have permission to access the object");
+                break;
+              case "storage/canceled":
+                console.log("User canceled the upload");
+                break;
+              case "storage/unknown":
+                console.log("Unknown error occurred, inspect error.serverResponse");
+                break;
+            }
+          },
+          async () => {
+            // Upload completed successfully, now we can get the download URL
+            const imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+            console.log("File available at", imageUrl);
+  
+            // Save the image URL to Firestore
+            // const db = getFirestore();
+            // const photosCollection = collection(db, "photos");
+            // await addDoc(photosCollection, { imageUrl, timestamp: Date.now() });
+  
+            // Notify the user and navigate to the "Log Progress" screen
+            Alert.alert("Success", "Picture saved! 🎉");
+            setImage(null);
+            navigation.navigate("Log Progress");
+          }
+        );
       } catch (error) {
         console.log(error);
+        Alert.alert("Error", "An error occurred while trying to save the picture. Please try again.");
       }
+    } else {
+      Alert.alert("Error", "Please select an image before trying to save.");
     }
   };
+  
+  
 
   if (hasCameraPermission === false) {
     return <Text>No access to camera</Text>;
@@ -154,4 +218,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
