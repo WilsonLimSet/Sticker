@@ -83,7 +83,7 @@ function HomeStack({ routeName }) {
 
 function ChallengeStack() {
     return (
-        <Stack.Navigator defaultScreenOptions={Home}>
+        <Stack.Navigator >
             <Stack.Screen name='Home' component={Home} />
             <Stack.Screen name='View Challenge' component={ViewChallenge} />
             <Stack.Screen name='Log Progress' component={LogProgress} />
