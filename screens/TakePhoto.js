@@ -22,6 +22,7 @@ import { getDownloadURL, ref, uploadBytes, getStorage} from "firebase/storage";
 import { collection, doc, updateDoc,arrayUnion } from "firebase/firestore";
 import { storage, database } from "../config/firebase";
 import { useSelector } from 'react-redux';
+import { manipulateAsync } from "expo-image-manipulator";
 
 
 const firebaseConfig = {
@@ -167,7 +168,13 @@ export default function TakePhoto() {
   
       if (!pickerResult.canceled) {
         const asset = pickerResult.assets[0];
-        const uploadUrl = await uploadImageAsync(asset.uri);
+         // compress the image
+        const compressedImage = await manipulateAsync(
+          asset.uri,
+          [{ resize: { width: 720 } }],
+          { compress: 0.25, format: "jpeg" }
+        );
+        const uploadUrl = await uploadImageAsync(compressedImage.uri);
         console.log(challengeId);
   
         const docRef = doc(database, "userChallenges", challengeId);
@@ -221,7 +228,7 @@ async function uploadImageAsync(uri) {
     xhr.open("GET", uri, true);
     xhr.send(null);
   });
-  filename = uuid.v4();
+  const filename = uuid.v4();
 
   const fileRef = ref(getStorage(), `images/${filename}`);
   const result = await uploadBytes(fileRef, blob);
