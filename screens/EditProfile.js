@@ -23,6 +23,7 @@ import { collection, doc, updateDoc,arrayUnion } from "firebase/firestore";
 import { storage, database } from "../config/firebase";
 import { useSelector } from 'react-redux';
 import { getAuth, updateProfile } from "firebase/auth";
+import { manipulateAsync } from "expo-image-manipulator";
 
 
 
@@ -42,7 +43,7 @@ if (!getApps().length) {
 
 LogBox.ignoreLogs([`Setting a timer for a long period`]);
 
-export default function TakePhoto() {
+export default function EditProfile() {
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   const navigation = useNavigation();
@@ -88,6 +89,8 @@ export default function TakePhoto() {
     if (!image) {
       return;
     }
+    const imageUrlWithTimestamp = image + `?time=${new Date().getTime()}`; // add timestamp to URL
+
   
     return (
       <View
@@ -109,14 +112,14 @@ export default function TakePhoto() {
             overflow: "hidden",
           }}
         >
-          <Image source={{ uri: image }} style={{ width: 250, height: 250 }} />
+          <Image source={{ uri: imageUrlWithTimestamp  }} style={{ width: 250, height: 250 }} />
         </View>
         <Text
           onPress={copyToClipboard}
           onLongPress={share}
           style={{ paddingVertical: 10, paddingHorizontal: 10 }}
         >
-          {image}
+          {imageUrlWithTimestamp }
         </Text>
       </View>
     );
@@ -144,12 +147,20 @@ export default function TakePhoto() {
   
       if (!pickerResult.canceled) {
         const asset = pickerResult.assets[0];
-        const uploadUrl = await uploadImageAsync(asset.uri);
+         // compress the image
+      const compressedImage = await manipulateAsync(
+        asset.uri,
+        [{ resize: { width: 720 } }],
+        { compress: 0.25, format: "jpeg" }
+      );
+        const uploadUrl = await uploadImageAsync(compressedImage.uri);
 
         // Update user profile picture
         const user = getAuth().currentUser;
         await updateProfile(user, { photoURL: uploadUrl });
         setImage(uploadUrl);
+        Alert.alert("Success", "Picture saved! 🎉");
+        navigation.navigate("EditProfile");
       }
     } catch (e) {
       console.log(e);
@@ -202,11 +213,10 @@ async function uploadImageAsync(uri) {
   });
   const filename = uuid.v4();
 
-  const fileRef = ref(getStorage(), `images/${filename}`);
+  const fileRef = ref(getStorage(), `profilepics/${filename}`);
   const result = await uploadBytes(fileRef, blob);
 
   // We're done with the blob, close and release it
   blob.close();
-
   return await getDownloadURL(fileRef);
 }
