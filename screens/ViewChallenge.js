@@ -39,7 +39,7 @@ export default function ViewChallenge({ route }) {
     <View style={styles.container}>
       <TouchableOpacity
                 style={styles.logProgressButton}
-                onPress={() => navigation.navigate('Log Progress')}
+                onPress={() => navigation.navigate('Log Progress', { id:challengeId })}
                 underlayColor='#fff'>
                 <Text style={styles.logProgressText}>Log Progress</Text>
             </TouchableOpacity>

@@ -7,8 +7,14 @@ import { database } from "../config/firebase";
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { getAuth } from "firebase/auth";
 import Created from '../components/Created';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from "react-redux";
+import { setChallengeId } from "./challengeSlice"
 
-export default function Home() {
+
+export default function HomeScreen() {
+  const dispatch = useDispatch();
+
   const [challenges, setChallenges] = useState([]);
   const [isEnabled, setIsEnabled] = useState(true);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -35,6 +41,7 @@ export default function Home() {
   }, []);
 
   const handleNavigation = (id) => {
+    dispatch(setChallengeId(id));
     console.log(id);
     navigation.navigate('View Challenge', { id });
   }

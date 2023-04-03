@@ -2,16 +2,15 @@ import React, { useState, createContext, useContext, useEffect } from 'react';
 import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { View, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './config/firebase';
-import { Camera, CameraType } from 'expo-camera';
-import * as MedicaLibrary from 'expo-media-library';
 import Login from './screens/Login';
 import Signup from './screens/Signup';
-import Home from './screens/HomeScreen';
+import HomeScreen from './screens/HomeScreen';
 import TakePhoto from './screens/TakePhoto';
 import ExploreChallenges from './screens/ExploreChallenges';
-import Profile from './screens/Profile';
+import ProfileScreen from './screens/Profile';
 import ActivityScreen from './screens/ActivityScreen';
 import CreateChallenge from './screens/CreateChallenge';
 import LogProgress from './screens/LogProgress';
@@ -25,6 +24,10 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 import { faCircleChevronDown } from '@fortawesome/free-solid-svg-icons/faCircleChevronDown';
 import colors from './colors';
 import Sample from './components/Sample';
+import challengeReducer from "./screens/challengeSlice";
+import { configureStore } from "@reduxjs/toolkit";
+import { Provider } from 'react-redux';
+
 import DeleteChallenge from './screens/DeleteChallenge';
 library.add(fab, faCircleChevronDown)
 
@@ -33,6 +36,12 @@ const Stack = createStackNavigator();
 const AuthenticatedUserContext = createContext({});
 const navigationRef = createNavigationContainerRef()
 
+const store = configureStore({
+    reducer: {
+      challenge: challengeReducer,
+    },
+  });
+  
 const AuthenticatedUserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     return (
@@ -45,7 +54,7 @@ const AuthenticatedUserProvider = ({ children }) => {
 function HomeStack({ routeName }) {
     return (
         <Tab.Navigator labeled={false} barStyle={{ display: routeName === "Take Photo" ? "none" : "flex", backgroundColor: colors.tabBar, position: 'absolute', overflow: 'hidden', borderTopLeftRadius: 30, borderTopRightRadius: 30 }} activeColor={colors.darkGray} screenOptions={{ headerShown: true }} >
-            <Tab.Screen name="Home" component={ChallengeStack}            //Home Screen
+            <Tab.Screen name="HomeScreen" component={ChallengeStack}            //Home Screen
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="home" color={color} size={26} />
@@ -70,7 +79,7 @@ function HomeStack({ routeName }) {
                         <MaterialIcons name="dynamic-feed" color={color} size={26} />
                     ),
                 }} />
-            <Tab.Screen name="Profile" component={ProfileStack}            // Profile Screen
+            <Tab.Screen name="ProfilePage" component={ProfileStack}            // Profile Screen
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="account-circle" color={color} size={26} />
@@ -84,7 +93,7 @@ function HomeStack({ routeName }) {
 function ChallengeStack() {
     return (
         <Stack.Navigator >
-            <Stack.Screen name='Home' component={Home} />
+            <Stack.Screen name='Home' component={HomeScreen} />
             <Stack.Screen name='View Challenge' component={ViewChallenge} />
             <Stack.Screen name='Log Progress' component={LogProgress} />
             <Stack.Screen name='Take Photo' component={TakePhoto} />
@@ -113,8 +122,8 @@ function ActivityStack() {
 
 function ProfileStack() {
     return (
-        <Stack.Navigator defaultScreenOptions={Profile} screenOptions={{ headerShown: false }}>
-            <Stack.Screen name='Profile' component={Profile} />
+        <Stack.Navigator defaultScreenOptions={ProfileScreen} screenOptions={{ headerShown: false }}>
+            <Stack.Screen name='Profile' component={ProfileScreen} />
             <Stack.Screen name='EditProfile' component={EditProfile} />
         </Stack.Navigator>
     );
@@ -172,8 +181,10 @@ function RootNavigator() {
 
 export default function App() {
     return (
+        <Provider store={store}>
         <AuthenticatedUserProvider>
             <RootNavigator />
         </AuthenticatedUserProvider>
+        </Provider>
     );
 }

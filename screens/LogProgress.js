@@ -1,6 +1,6 @@
 
-import { useNavigation } from '@react-navigation/native';
-import { React, useState, useCallback } from 'react'
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { React, useState, useCallback, useEffect} from 'react'
 import { View, Text, StyleSheet, TextInput } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import * as Clipboard from 'expo-clipboard';
@@ -9,7 +9,14 @@ import { FontAwesome } from '@expo/vector-icons';
 import  MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 export default function LogProgress() {
+  const [challengeId, setChallengeId] = useState(null);
+  const route = useRoute(); // add this line to get route object
   const navigation = useNavigation();
+  useEffect(() => {
+    const { id } = route.params;
+    console.log(id);
+    setChallengeId(id);
+  }, []);
   return (
     <View style={styles.container}>
         <View style={styles.statsSection}>
@@ -17,10 +24,9 @@ export default function LogProgress() {
             
         </View>
       
-        {/* Take Photo HERE */}
         <TouchableOpacity
             style={styles.logProgressButton}
-            onPress={() => navigation.navigate('Take Photo')}
+            onPress={() => navigation.navigate('Take Photo',{ id:challengeId })}
             underlayColor='#fff'>
             <Text style={styles.logProgressText}>Take Photo</Text>
         </TouchableOpacity>

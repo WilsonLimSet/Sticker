@@ -13,7 +13,7 @@ import firebase from "../config/firebase";
 import { doc, getDoc, getFirestore, setDoc, collection} from "firebase/firestore";
 import colors from '../colors';
 
-export default function Profile() {
+export default function ProfileScreen() {
   // const [user,SetUser] = useState(null);
   const sendDataToFirestore = async() => {
     const uid = auth.currentUser?.uid;

@@ -74,6 +74,7 @@ export default function CreateChallenge({ navigation }) {
       metric: '',
       friends:'',
       createdAt: new Date(),
+      imageUrls: ''
   });
 
   const handlePick = () => {
