@@ -1,111 +1,222 @@
-import React, { useState, useContext } from "react";
-import { StyleSheet, Text, View, Button, TextInput, Image, SafeAreaView, TouchableOpacity, StatusBar, Alert } from "react-native";
-import { auth, upload,useAuth } from "../config/firebase";
-import { collection, doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, getDocs, where, query, Firestore,  } from "firebase/firestore"; 
-import { signOut } from 'firebase/auth';
-import {database} from "../config/firebase";
+import * as ImagePicker from "expo-image-picker";
+import { getApps, initializeApp } from "firebase/app";
+import React, { useState, useEffect } from "react";
+import {
+  ActivityIndicator,
+  Button,
+  Image,
+  Share,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+  LogBox,
+  Alert,
+  Platform,
+} from "react-native";
+import * as Clipboard from "expo-clipboard";
+import uuid from "uuid";
+import Constants from "expo-constants";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { getDownloadURL, ref, uploadBytes, getStorage} from "firebase/storage";
+import { collection, doc, updateDoc,arrayUnion } from "firebase/firestore";
+import { storage, database } from "../config/firebase";
+import { useSelector } from 'react-redux';
+import { getAuth, updateProfile } from "firebase/auth";
+import { manipulateAsync } from "expo-image-manipulator";
 
-import { useNavigation } from '@react-navigation/native';
-import { useEffect} from "react";
-import colors from '../colors';
-import { getAuth } from "firebase/auth";
-import { createUserWithEmailAndPassword,updateProfile } from 'firebase/auth';
 
 
-const backImage = require("../assets/backImage.jpg");
+const firebaseConfig = {
+  apiKey: Constants.manifest.extra.apiKey,
+  authDomain: Constants.manifest.extra.authDomain,
+  projectId: Constants.manifest.extra.projectId,
+  storageBucket: Constants.manifest.extra.storageBucket,
+  messagingSenderId: Constants.manifest.extra.messagingSenderId,
+  appId: Constants.manifest.extra.appId,
+  databaseURL: Constants.manifest.extra.databaseURL,
+};
+
+if (!getApps().length) {
+  initializeApp(firebaseConfig);
+}
+
+LogBox.ignoreLogs([`Setting a timer for a long period`]);
 
 export default function EditProfile() {
-  const authh = getAuth();
-  const user = authh.currentUser;
-  const [photo, setPhoto] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [photoURL, setPhotoURL] = useState("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png");
+  const [image, setImage] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const navigation = useNavigation();
-  const [name, setName] = useState("");
+  const route = useRoute();
+  const [imageUrls, setImageUrls] = useState([]);
+  const challengeId = useSelector((state) => state.challenge.challengeId);
 
-  const onHandleChanges= async () => {
-    await updateProfile(user,{
-      displayName:name,
-      //photoURL: 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png',
+  // useEffect(() => {
+  //   async function requestCameraPermissions() {
+  //     if (Platform.OS !== "web") {
+  //       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        
+  //       }
+  //     }
+  //   }
+
+  const maybeRenderUploadingOverlay = () => {
+    if (uploading) {
+      return (
+        <View
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              backgroundColor: "rgba(0,0,0,0.4)",
+              alignItems: "center",
+              justifyContent: "center",
+            },
+          ]}
+        >
+          <ActivityIndicator color="#fff" animating size="large" />
+        </View>
+      );
+    }
+  };
+  const share = () => {
+    Share.share({
+      message: image,
+      title: "Check out this photo",
+      url: image,
     });
-    await setDoc(doc(database, "users", user.uid), 
-    { displayName:name})
-    //,photoURL: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"}) 
-    await user.reload();
-    // await user?.updateDisplayName("Jane Q. User");
-    // await user?.updatePhotoURL("https://example.com/jane-q-user/profile.jpg");
-    console.log('Document Added') 
-  }     
+  };
+  const maybeRenderImage = () => {
+    if (!image) {
+      return;
+    }
+    const imageUrlWithTimestamp = image + `?time=${new Date().getTime()}`; // add timestamp to URL
+
   
+    return (
+      <View
+        style={{
+          marginTop: 30,
+          width: 250,
+          borderRadius: 3,
+          elevation: 2,
+        }}
+      >
+        <View
+          style={{
+            borderTopRightRadius: 3,
+            borderTopLeftRadius: 3,
+            shadowColor: "rgba(0,0,0,1)",
+            shadowOpacity: 0.2,
+            shadowOffset: { width: 4, height: 4 },
+            shadowRadius: 5,
+            overflow: "hidden",
+          }}
+        >
+          <Image source={{ uri: imageUrlWithTimestamp  }} style={{ width: 250, height: 250 }} />
+        </View>
+        <Text
+          onPress={copyToClipboard}
+          onLongPress={share}
+          style={{ paddingVertical: 10, paddingHorizontal: 10 }}
+        >
+          {imageUrlWithTimestamp }
+        </Text>
+      </View>
+    );
+  };
+  
+  const copyToClipboard = () => {
+    Clipboard.setString(image);
+    alert("Copied image URL to clipboard");
+  };
+  
+  const _pickImage = async () => {
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+  
+    console.log({ pickerResult });
+  
+    _handleImagePicked(pickerResult);
+  };
+  
+  const _handleImagePicked = async (pickerResult) => {
+    try {
+      setUploading(true);
+  
+      if (!pickerResult.canceled) {
+        const asset = pickerResult.assets[0];
+         // compress the image
+      const compressedImage = await manipulateAsync(
+        asset.uri,
+        [{ resize: { width: 720 } }],
+        { compress: 0.25, format: "jpeg" }
+      );
+        const uploadUrl = await uploadImageAsync(compressedImage.uri);
+
+        // Update user profile picture
+        const user = getAuth().currentUser;
+        await updateProfile(user, { photoURL: uploadUrl });
+        setImage(uploadUrl);
+        Alert.alert("Success", "Picture saved! 🎉");
+        navigation.navigate("EditProfile");
+      }
+    } catch (e) {
+      console.log(e);
+      alert("Upload failed, sorry :(");
+    } finally {
+      setUploading(false);
+    }
+  };
+  
+
+
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={styles.form}>
-      <Text style={{fontWeight: '500', alignSelf: "center", color: 'white', fontSize: 18, marginBottom: 10}}> Enter a new name </Text>
-      <TextInput
-          style={styles.input}
-          placeholder="Enter a new name"
-          autoCapitalize="none"
-          keyboardType="name"
-          textContentType="name"
-          autoFocus={true}
-          value={name}
-          onChangeText={(text) => setName(text)}
-        />
-      <TouchableOpacity style={styles.button} onPress={onHandleChanges} >
-        <Text style={{fontWeight: 'bold', color: 'black', fontSize: 18}}> Save Changes</Text>
-      </TouchableOpacity>
-      </SafeAreaView>
-      <StatusBar barStyle="light-content" />
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      {!!image && (
+        <Text
+          style={{
+            fontSize: 20,
+            marginBottom: 20,
+            textAlign: "center",
+            marginHorizontal: 15,
+          }}
+        >
+          Example: Upload ImagePicker result
+        </Text>
+      )}
+  
+      <Button onPress={_pickImage} title="Pick an image from camera roll" />
+  
+      {maybeRenderImage()}
+      {maybeRenderUploadingOverlay()}
+  
+      <StatusBar barStyle="default" />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.darkGray,
-  },
-  title: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    color: "#B8DCEA",
-    alignSelf: "center",
-    paddingBottom: 24,
-  },
-  input: {
-    backgroundColor: "#F6F7FB",
-    height: 58,
-    marginBottom: 20,
-    fontSize: 16,
-    borderRadius: 10,
-    padding: 12,
-  },
-  backImage: {
-    width: "100%",
-    height: 340,
-    position: "absolute",
-    top: 0,
-    resizeMode: 'cover',
-  },
-  whiteSheet: {
-    width: '100%',
-    height: '75%',
-    position: "absolute",
-    bottom: 0,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 60,
-  },
-  form: {
-    flex: 1,
-    justifyContent: 'center',
-    marginHorizontal: 30,
-  },
-  button: {
-    backgroundColor: '#B8DCEA',
-    height: 58,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 25,
-  },
-});
+async function uploadImageAsync(uri) {
+  const blob = await new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      resolve(xhr.response);
+    };
+    xhr.onerror = function (e) {
+      console.log(e);
+      reject(new TypeError("Network request failed"));
+    };
+    xhr.responseType = "blob";
+    xhr.open("GET", uri, true);
+    xhr.send(null);
+  });
+  const filename = uuid.v4();
+
+  const fileRef = ref(getStorage(), `profilepics/${filename}`);
+  const result = await uploadBytes(fileRef, blob);
+
+  // We're done with the blob, close and release it
+  blob.close();
+  return await getDownloadURL(fileRef);
+}
