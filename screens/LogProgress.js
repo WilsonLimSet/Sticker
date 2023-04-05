@@ -1,35 +1,99 @@
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { React, useState, useCallback, useEffect} from 'react'
-import { View, Text, StyleSheet, TextInput } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import * as Clipboard from 'expo-clipboard';
+import { View, Text, StyleSheet, TextInput ,Alert} from 'react-native';
 import colors from '../colors';
 import { FontAwesome } from '@expo/vector-icons';
 import  MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { storage, database } from "../config/firebase";
+import firebase from "../config/firebase";
+import { doc, getDoc,deleteDoc } from 'firebase/firestore'; 
+import { useDispatch ,useSelector} from "react-redux";
+import { setProgress,setDescription,setChallengeId} from "./challengeSlice"
+
 export default function LogProgress() {
-  const [challengeId, setChallengeId] = useState(null);
   const route = useRoute(); // add this line to get route object
   const navigation = useNavigation();
+  const [progresss, setProgresss] = useState("");
+  const [descriptionn, setDescriptionn] = useState("");
+  const [metricValue, setMetricValue] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const dispatch = useDispatch();
+  const challengeId = useSelector((state) => state.challenge.challengeId);
+  
+    const handleLogProgress = useCallback((progresss, descriptionn) => {
+    if (progresss !== "" && descriptionn !== "") {
+        dispatch(setProgress(progresss));
+        dispatch(setDescription(descriptionn));
+        console.log(progresss);
+        console.log(descriptionn);
+        navigation.navigate('Take Photo');
+    } else {
+        Alert.alert( "Please fill out both progress and description fields.");
+    }
+    }, []);
+
+
   useEffect(() => {
-    const { id } = route.params;
-    console.log(id);
-    setChallengeId(id);
-  }, []);
+    const fetchChallenge = async () => {
+      try {
+        const challengeDocRef = doc(database, 'userChallenges', challengeId);
+        const challengeDoc = await getDoc(challengeDocRef);
+        if (challengeDoc.exists()) {
+          const metric = challengeDoc.data().metric;
+          setMetricValue(metric);
+          console.log(metric);
+        } else {
+          console.log('No challenge document found');
+        }
+      } catch (error) {
+        console.log('Error fetching challenge:', error);
+      }
+    };
+    fetchChallenge();
+  }, [challengeId]);
+
   return (
     <View style={styles.container}>
         <View style={styles.statsSection}>
             <Text style={styles.title}>Log Progress</Text>
             
         </View>
+        <Text style={{fontWeight: '500', alignSelf: "center", color: 'white', fontSize: 18, marginBottom: 10}}> Enter your progress in terms of  {metricValue} </Text>
+        <TextInput
+    style={[styles.input,{ width: 150, height: 50 }]}
+    placeholder="Enter your progress"
+    autoCapitalize="none"
+    keyboardType="numeric"
+    textContentType="name"
+    autoFocus={true}
+    value={progresss}
+    onChangeText={(text) => {setProgresss(text);}}
+/>
+{errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+
+<Text style={{fontWeight: '500', alignSelf: "center", color: 'white', fontSize: 18, marginBottom: 10}}> Enter a description </Text>
+      <TextInput
+          style={styles.input}
+          placeholder="Description"
+          autoCapitalize="none"
+          keyboardType="name"
+          textContentType="name"
+          autoFocus={true}
+          value={descriptionn}
+          onChangeText={(text) => setDescriptionn(text)}
+        />
       
-        <TouchableOpacity
-            style={styles.logProgressButton}
-            onPress={() => navigation.navigate('Take Photo',{ id:challengeId })}
-            underlayColor='#fff'>
-            <Text style={styles.logProgressText}>Take Photo</Text>
-        </TouchableOpacity>
+      
+      <TouchableOpacity
+        style={styles.logProgressButton}
+        onPress={useCallback(() => handleLogProgress(progresss, descriptionn), [progresss, descriptionn])}
+
+        underlayColor='#fff'
+      >
+        <Text style={styles.logProgressText}>Take a photo to log it!</Text>
+      </TouchableOpacity>
     </View>
 );
 }
@@ -40,6 +104,14 @@ container: {
     backgroundColor: colors.darkGray,
     // paddingLeft: 18
 },
+input: {
+    backgroundColor: "#F6F7FB",
+    height: 58,
+    marginBottom: 20,
+    fontSize: 16,
+    borderRadius: 10,
+    padding: 12,
+  },
 statsSection: {
     marginTop: "5%",
     paddingLeft: 18

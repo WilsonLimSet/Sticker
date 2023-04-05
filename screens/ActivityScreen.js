@@ -77,7 +77,7 @@ export default function ActivityScreen() {
                             </View>
                         </View>
                     </View>
-                    <View style={styles.postSection}>
+                    {/* <View style={styles.postSection}>
                         <View style={styles.profileBar}>
                             <Image source={{ uri: profileImageUrl }} style={styles.profile}/>
                             <View>
@@ -94,7 +94,7 @@ export default function ActivityScreen() {
                                         <Text style={styles.text}>34 pgs read</Text>
                                     </View>
                                     <View style={styles.engagementButtons}>
-                                        {/* heart, comments */}
+                                       
                                         <Pressable onPress={() => setLiked1((isLiked) => !isLiked)}>
                                             <MaterialCommunityIcons
                                                 name={liked1 ? "heart" : "heart-outline"}
@@ -112,7 +112,7 @@ export default function ActivityScreen() {
                                 </View>
                             </View>
                         </View>
-                    </View>
+                    </View> */}
                     <View style={styles.postSection}>
                         <View style={styles.profileBar}>
                             <Image source={{ uri: profileImageUrl }} style={styles.profile}/>

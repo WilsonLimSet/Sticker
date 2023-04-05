@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { React, useState, useCallback, useEffect } from 'react'
-import { View, Text, StyleSheet, TextInput, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Image , ScrollView} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import * as Clipboard from 'expo-clipboard';
 import colors from '../colors';
@@ -8,33 +8,45 @@ import { FontAwesome } from '@expo/vector-icons';
 import  MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { doc, getDoc,deleteDoc } from 'firebase/firestore';
-import { database } from '../config/firebase';
+import { storage, database } from "../config/firebase";
+import FeedComponent from '../components/FeedComponent';
 
 export default function ViewChallenge({ route }) {
   const [challengeId, setChallengeId] = useState(null);
+  const [photoUrls, setPhotoUrls] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation(); // add this line to get navigation object
 
   useEffect(() => {
     const { id } = route.params;
-    console.log(id);
     const fetchChallenge = async () => {
       try {
         const challengeDocRef = doc(database, 'userChallenges', id);
         const challengeDoc = await getDoc(challengeDocRef);
         if (challengeDoc.exists()) {
           setChallengeId(id);
-          
+          setPhotoUrls(challengeDoc.data().imageUrls);
         } else {
           console.log('No challenge document found');
         }
       } catch (error) {
         console.log('Error fetching challenge:', error);
+      }finally {
+        setIsLoading(false);
       }
     };
     fetchChallenge();
-  }, []);
+  }, [route.params]);
 
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.text}>Loading...</Text>
+      </View>
+    );
+  }
 
+  
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -51,11 +63,16 @@ export default function ViewChallenge({ route }) {
             
         <Text style={styles.deleteChallengeText}>Delete Challenge</Text>
       </TouchableOpacity>
-    </View>
-  );
+
+      <ScrollView>
+        <FeedComponent photoUrls={photoUrls} />
+      </ScrollView>
+      </View>
+
+      );
+      
+    
 }
-
-
 
 const styles = StyleSheet.create({
     container: {
@@ -63,6 +80,14 @@ const styles = StyleSheet.create({
         backgroundColor: colors.darkGray,
         // paddingLeft: 18
     },
+    imageContainer: {
+        width: 235,
+        height: 235,
+        overflow: "hidden",
+        borderRadius: 10,
+        zIndex: 2, // add zIndex here
+        backgroundColor: 'white'
+      },
 
     statSection: {
         display: "flex",

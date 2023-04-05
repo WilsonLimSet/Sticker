@@ -1,4 +1,3 @@
-//import React, { useContext, useState } from "react";
 import React,{useRef,useState, useEffect} from 'react';
 import { StyleSheet, Text, View, Button, TextInput, Image, SafeAreaView, TouchableOpacity, StatusBar, Alert } from "react-native";
 import { auth } from "../config/firebase";
@@ -8,53 +7,20 @@ import { UserInterfaceIdiom } from "expo-constants";
 import "firebase/auth";
 import { getAuth } from "firebase/auth";
 import {database} from "../config/firebase";
-const backImage = require("../assets/backImage.jpg");
 import firebase from "../config/firebase";
 import { doc, getDoc, getFirestore, setDoc, collection} from "firebase/firestore";
 import colors from '../colors';
 
 export default function ProfileScreen() {
-  // const [user,SetUser] = useState(null);
-  const sendDataToFirestore = async() => {
-    const uid = auth.currentUser?.uid;
-    const docRef = doc(database, "user", uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      console.log("Document Data", docSnap.data());
-      SetUser.doc.data()
-    }
-    else{
-      console.log("Document Data Not Exist");
-    }
-  }
   const authh = getAuth();
   const user = authh.currentUser;
-
   const profileImageUrl = user.photoURL;
-
   const navigation = useNavigation();
   const onSignOut = () => {
     signOut(auth).catch(error => console.log('Error logging out: ', error));
   };
 
-//   useEffect(() => {
-//     navigation.setOptions({
-//         headerTitleStyle: {
-//           fontSize: 24,
-//           fontWeight: "600",
-//         },
-//         headerTintColor: "white",
-//         headerStyle: {
-//             backgroundColor: colors.darkGray,
-//             shadowRadius: 0,
-//             shadowOffset: {
-//                 height: 0,
-//             },
-//         },
-//     });
-// }, [navigation]);
-  
-  return (
+    return (
     <View style={styles.container}>
       <View style={styles.subContainer}>  
         <View style={styles.userImgContainer}>
