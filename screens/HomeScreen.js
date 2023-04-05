@@ -7,18 +7,15 @@ import { database } from "../config/firebase";
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { getAuth } from "firebase/auth";
 import Created from '../components/Created';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from "react-redux";
 import { setChallengeId } from "./challengeSlice"
 
 
 export default function HomeScreen() {
   const dispatch = useDispatch();
-
   const [challenges, setChallenges] = useState([]);
   const [isEnabled, setIsEnabled] = useState(true);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-
   const auth = getAuth();
   const user = auth.currentUser;
   const profileImageUrl = user.photoURL;

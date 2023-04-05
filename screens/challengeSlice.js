@@ -4,13 +4,23 @@ const challengeSlice = createSlice({
   name: "challenge",
   initialState: {
     challengeId: null,
+    progressLog:null,
+    descriptionLog:null,
   },
   reducers: {
     setChallengeId: (state, action) => {
       state.challengeId = action.payload;
     },
+    setProgress: (state, action) => {
+      state.progressLog = action.payload;
+    },
+    setDescription: (state, action) => {
+      state.descriptionLog = action.payload;
+    }
   },
 });
 
 export const { setChallengeId } = challengeSlice.actions;
+export const { setProgress } = challengeSlice.actions;
+export const { setDescription } = challengeSlice.actions;
 export default challengeSlice.reducer;

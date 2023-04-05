@@ -18,30 +18,12 @@ import * as Clipboard from "expo-clipboard";
 import uuid from "uuid";
 import Constants from "expo-constants";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { getDownloadURL, ref, uploadBytes, getStorage} from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes, getStorage,deleteObject} from "firebase/storage";
 import { collection, doc, updateDoc,arrayUnion } from "firebase/firestore";
 import { storage, database } from "../config/firebase";
 import { useSelector } from 'react-redux';
 import { getAuth, updateProfile } from "firebase/auth";
 import { manipulateAsync } from "expo-image-manipulator";
-
-
-
-const firebaseConfig = {
-  apiKey: Constants.manifest.extra.apiKey,
-  authDomain: Constants.manifest.extra.authDomain,
-  projectId: Constants.manifest.extra.projectId,
-  storageBucket: Constants.manifest.extra.storageBucket,
-  messagingSenderId: Constants.manifest.extra.messagingSenderId,
-  appId: Constants.manifest.extra.appId,
-  databaseURL: Constants.manifest.extra.databaseURL,
-};
-
-if (!getApps().length) {
-  initializeApp(firebaseConfig);
-}
-
-LogBox.ignoreLogs([`Setting a timer for a long period`]);
 
 export default function EditProfile() {
   const [image, setImage] = useState(null);
@@ -50,15 +32,6 @@ export default function EditProfile() {
   const route = useRoute();
   const [imageUrls, setImageUrls] = useState([]);
   const challengeId = useSelector((state) => state.challenge.challengeId);
-
-  // useEffect(() => {
-  //   async function requestCameraPermissions() {
-  //     if (Platform.OS !== "web") {
-  //       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        
-  //       }
-  //     }
-  //   }
 
   const maybeRenderUploadingOverlay = () => {
     if (uploading) {
@@ -91,7 +64,6 @@ export default function EditProfile() {
     }
     const imageUrlWithTimestamp = image + `?time=${new Date().getTime()}`; // add timestamp to URL
 
-  
     return (
       <View
         style={{
@@ -157,6 +129,17 @@ export default function EditProfile() {
 
         // Update user profile picture
         const user = getAuth().currentUser;
+        const prevProfilePicUrl = user.photoURL;
+        if (prevProfilePicUrl) {
+          const storageRef = ref(storage, prevProfilePicUrl);
+          // Delete the file
+          deleteObject(storageRef).then(() => {
+            // File deleted successfully
+          }).catch((error) => {
+            // Uh-oh, an error occurred!
+          });
+        }
+
         await updateProfile(user, { photoURL: uploadUrl });
         setImage(uploadUrl);
         Alert.alert("Success", "Picture saved! 🎉");
@@ -170,8 +153,6 @@ export default function EditProfile() {
     }
   };
   
-
-
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       {!!image && (

@@ -9,65 +9,59 @@ import { getAuth } from "firebase/auth";
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons'; 
 
-
-
-// export default function ExploreChallenges() {
-//     const auth = getAuth();
-//     const user = auth.currentUser;
-
-//     const profileImageUrl = user.photoURL;
-//     const [products, setProducts] = useState([]);
-//     const navigation = useNavigation();
-
-//     useEffect(() => {
-//         const collectionRef = collection(database, 'exploreChallenges');
-//         const q = query(collectionRef, orderBy('name', 'desc'));
-
-//     const unsubscribe = onSnapshot(q, querySnapshot => {
-//         console.log('querySnapshot unsusbscribe');
-//           setProducts(
-//             querySnapshot.docs.map(doc => ({
-//                 name: doc.data().name,
-//                 days: doc.data().days,
-//             }))
-//           );
-//         });
-    
-//         navigation.setOptions({
-//             title: "Explore Challenges",
-//             headerTitleStyle: {
-//                 fontSize: 30,
-//             },
-//             headerTitleAlign:'left',
-//             headerTintColor: "white",
-//             headerStyle: {
-//                 backgroundColor: colors.darkGray,
-//                 shadowRadius: 0,
-//                 shadowOffset: {
-//                     height: 0,
-//                 },
-//             },
-//             headerLeft: () => (
-//                 // <FontAwesome name="bars" size={24} color="white" style={{marginLeft: 15}}/>
-//                 null
-//             ),
-//         });
-//         return unsubscribe;
-//     }, []);
-
-
-//     return(
-//         <View style={styles.container}>
-//             <ScrollView contentContainerStyle={{paddingBottom: 100}}>
-//             {/* <Text style={styles.title}>Sponsored </Text> */}
-//                 {products.map(product => <Sample key={product.name} {...product} />)}
-//             </ScrollView>
-//         </View>
-//     );
-
-// }
-
 export default function ExploreChallenges() {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const profileImageUrl = user.photoURL;
+    const [products, setProducts] = useState([]);
+    const navigation = useNavigation();
+
+    useEffect(() => {
+        const collectionRef = collection(database, 'exploreChallenges');
+        const q = query(collectionRef, orderBy('name', 'desc'));
+
+    const unsubscribe = onSnapshot(q, querySnapshot => {
+        console.log('querySnapshot unsusbscribe');
+          setProducts(
+            querySnapshot.docs.map(doc => ({
+                name: doc.data().name,
+                days: doc.data().days,
+            }))
+          );
+        });
+    
+        navigation.setOptions({
+            title: "Explore Challenges",
+            headerTitleStyle: {
+                fontSize: 30,
+            },
+            headerTitleAlign:'left',
+            headerTintColor: "white",
+            headerStyle: {
+                backgroundColor: colors.darkGray,
+                shadowRadius: 0,
+                shadowOffset: {
+                    height: 0,
+                },
+            },
+            headerLeft: () => (
+                // <FontAwesome name="bars" size={24} color="white" style={{marginLeft: 15}}/>
+                null
+            ),
+        });
+        return unsubscribe;
+    }, []);
+
+
+    return(
+        <View style={styles.container}>
+            <ScrollView contentContainerStyle={{paddingBottom: 100}}>
+            {/* <Text style={styles.title}>Sponsored </Text> */}
+                {products.map(product => <Sample key={product.name} {...product} />)}
+            </ScrollView>
+        </View>
+    );
+
 }
 
 const styles = StyleSheet.create({
@@ -147,3 +141,6 @@ const styles = StyleSheet.create({
         borderRadius: 50
     }
 });
+
+
+

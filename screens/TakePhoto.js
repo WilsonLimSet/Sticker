@@ -21,9 +21,9 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { getDownloadURL, ref, uploadBytes, getStorage} from "firebase/storage";
 import { collection, doc, updateDoc,arrayUnion } from "firebase/firestore";
 import { storage, database } from "../config/firebase";
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 import { manipulateAsync } from "expo-image-manipulator";
-
+import { setProgress,setDescription} from "./challengeSlice"
 
 const firebaseConfig = {
   apiKey: Constants.manifest.extra.apiKey,
@@ -46,16 +46,9 @@ export default function TakePhoto() {
   const [uploading, setUploading] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
-  const [imageUrls, setImageUrls] = useState([]);
   const challengeId = useSelector((state) => state.challenge.challengeId);
-
-
-
-  // useEffect(() => {
-  //   const { id } = route.params;
-  //   console.log(id);
-  //   setChallengeId(id);
-  // }, [route.params.id]);
+  const progressLog = useSelector((state) => state.challenge.progressLog);
+  const descriptionLog = useSelector((state) => state.challenge.descriptionLog);
 
   useEffect(() => {
     async function requestCameraPermissions() {
@@ -176,10 +169,14 @@ export default function TakePhoto() {
         );
         const uploadUrl = await uploadImageAsync(compressedImage.uri);
         console.log(challengeId);
+        console.log(descriptionLog);
+        console.log(progressLog)
   
         const docRef = doc(database, "userChallenges", challengeId);
         const data = {
-          imageUrls: arrayUnion(uploadUrl)
+          imageUrls: arrayUnion(uploadUrl),
+          description: arrayUnion(descriptionLog),
+          progress: arrayUnion(progressLog)
         };
   
         updateDoc(docRef, data).then(() => {
@@ -202,9 +199,6 @@ export default function TakePhoto() {
     }
   };
   
-  
-  
-
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       {_maybeRenderImage()}
