@@ -1,4 +1,4 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute ,useHeaderHeight } from '@react-navigation/native';
 import { React, useState, useCallback, useEffect } from 'react'
 import { View, Text, StyleSheet, TextInput, Image , ScrollView} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -10,12 +10,21 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { doc, getDoc,deleteDoc } from 'firebase/firestore';
 import { storage, database } from "../config/firebase";
 import FeedComponent from '../components/FeedComponent';
+import { useDispatch ,useSelector} from "react-redux";
+
 
 export default function ViewChallenge({ route }) {
+  
   const [challengeId, setChallengeId] = useState(null);
   const [photoUrls, setPhotoUrls] = useState([]);
+  const [progressLog, setProgress] = useState([]);
+  const [descriptionLog, setDescription] = useState([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation(); // add this line to get navigation object
+  const [metricValue, setMetricValue] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const { id } = route.params;
@@ -24,8 +33,12 @@ export default function ViewChallenge({ route }) {
         const challengeDocRef = doc(database, 'userChallenges', id);
         const challengeDoc = await getDoc(challengeDocRef);
         if (challengeDoc.exists()) {
+            const metric = challengeDoc.data().metric;
+            setMetricValue(metric);
           setChallengeId(id);
           setPhotoUrls(challengeDoc.data().imageUrls);
+          setProgress(challengeDoc.data().progress);
+          setDescription(challengeDoc.data().description);
         } else {
           console.log('No challenge document found');
         }
@@ -49,27 +62,34 @@ export default function ViewChallenge({ route }) {
   
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-                style={styles.logProgressButton}
-                onPress={() => navigation.navigate('Log Progress', { id:challengeId })}
-                underlayColor='#fff'>
-                <Text style={styles.logProgressText}>Log Progress</Text>
-            </TouchableOpacity>
+        <ScrollView  style={{ marginBottom: 100 }}>
+        <TouchableOpacity
+            style={styles.logProgressButton}
+            onPress={() => navigation.navigate('Log Progress', { id:challengeId })}
+            underlayColor='#fff'
+            sticky>
+            <Text style={styles.logProgressText}>Log Progress</Text>
+        </TouchableOpacity>
+      
+    
+        {photoUrls.reverse().map((photoUrl, index) => (
+          <FeedComponent key={index} 
+          photoUrl={photoUrl} 
+          metricValue = {metricValue} 
+          progressLog = {progressLog[photoUrls.length - 1 - index]}
+          descriptionLog ={descriptionLog[photoUrls.length - 1 - index]}/>
+        ))}
+      
       <TouchableOpacity
         style={styles.deleteChallengeButton}
-        
         onPress={() => navigation.navigate('Delete Challenge', { id:challengeId })}
         underlayColor='#fff'>
-            
         <Text style={styles.deleteChallengeText}>Delete Challenge</Text>
       </TouchableOpacity>
-
-      <ScrollView>
-        <FeedComponent photoUrls={photoUrls} />
       </ScrollView>
-      </View>
-
-      );
+    </View>
+  );
+  
       
     
 }
