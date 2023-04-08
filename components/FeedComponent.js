@@ -12,30 +12,33 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { database } from "../config/firebase";
 import colors from '../colors';
 import { getAuth } from "firebase/auth";
+import ReactTimeago from 'react-timeago';
 
-export default function FeedComponent({ photoUrls }) {
+export default function FeedComponent({ photoUrl,progressLog,metricValue ,descriptionLog}) {
     const authh = getAuth();
   const user = authh.currentUser;
   const profileImageUrl = user.photoURL;
+  const date = new Date(Date.now());
   return (
     <View style={styles.container}>
       <View style={styles.activityFeed}>
         <View style={styles.profileBar}>
           <Image source={{ uri: profileImageUrl }} style={styles.profile} />
           <View>
-            <Text style={styles.text}>Sarah Liang</Text>
-            <Text style={{ color: "white", fontSize: 10 }}>Today 3:53</Text>
+            <Text style={styles.text}>{authh?.currentUser?.displayName}  </Text>
+         
+           
+            <Text style={{ color: "white", fontSize: 10 }}>{progressLog} {metricValue} - {descriptionLog}</Text>
           </View>
           <MaterialCommunityIcons style={styles.arrowIcon} name="chevron-right" color="white" size={25} />
         </View>
         <View style={styles.subContainer}>
           <ScrollView horizontal={true}>
             <View style={styles.imageContainer}>
-              {Array.isArray(photoUrls) && photoUrls.map((photoUrl, index) => (
-                <View key={index} style={styles.imgContainer}>
+                <View style={styles.imgContainer}>
                   <Image source={{ uri: photoUrl }} style={styles.img} />
                 </View>
-              ))}
+           
             </View>
           </ScrollView>
         </View>
@@ -64,9 +67,9 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     imgContainer: {
-      width: '32%',
+      width: '102%',
       aspectRatio: 1,
-      margin: '1%',
+      margin: '0%',
     },
     img: {
       flex: 1,
