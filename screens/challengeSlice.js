@@ -6,6 +6,7 @@ const challengeSlice = createSlice({
     challengeId: null,
     progressLog:null,
     descriptionLog:null,
+    dateLog:null
   },
   reducers: {
     setChallengeId: (state, action) => {
@@ -16,6 +17,9 @@ const challengeSlice = createSlice({
     },
     setDescription: (state, action) => {
       state.descriptionLog = action.payload;
+    },
+    setDate: (state, action) => {
+      state.dateLog = action.payload;
     }
   },
 });
@@ -23,4 +27,5 @@ const challengeSlice = createSlice({
 export const { setChallengeId } = challengeSlice.actions;
 export const { setProgress } = challengeSlice.actions;
 export const { setDescription } = challengeSlice.actions;
+export const {setDate} = challengeSlice.actions;
 export default challengeSlice.reducer;

@@ -12,22 +12,21 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { database } from "../config/firebase";
 import colors from '../colors';
 import { getAuth } from "firebase/auth";
-import ReactTimeago from 'react-timeago';
+import { formatDistance, parseISO } from 'date-fns';
 
-export default function FeedComponent({ photoUrl,progressLog,metricValue ,descriptionLog}) {
-    const authh = getAuth();
+export default function FeedComponent({ photoUrl,progressLog,metricValue ,descriptionLog,dateLog}) {
+  const authh = getAuth();
   const user = authh.currentUser;
   const profileImageUrl = user.photoURL;
-  const date = new Date(Date.now());
+  const realdateLog = formatDistance(parseISO(dateLog), new Date(), { addSuffix: true });
+
   return (
     <View style={styles.container}>
       <View style={styles.activityFeed}>
         <View style={styles.profileBar}>
           <Image source={{ uri: profileImageUrl }} style={styles.profile} />
           <View>
-            <Text style={styles.text}>{authh?.currentUser?.displayName}  </Text>
-         
-           
+            <Text style={styles.text}>{authh?.currentUser?.displayName} - {realdateLog} </Text>
             <Text style={{ color: "white", fontSize: 10 }}>{progressLog} {metricValue} - {descriptionLog}</Text>
           </View>
           <MaterialCommunityIcons style={styles.arrowIcon} name="chevron-right" color="white" size={25} />
