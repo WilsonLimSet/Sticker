@@ -10,24 +10,29 @@ import { storage, database } from "../config/firebase";
 import firebase from "../config/firebase";
 import { doc, getDoc,deleteDoc } from 'firebase/firestore'; 
 import { useDispatch ,useSelector} from "react-redux";
-import { setProgress,setDescription,setChallengeId} from "./challengeSlice"
+import { setProgress,setDescription,setChallengeId,setDate} from "./challengeSlice"
 
 export default function LogProgress() {
   const route = useRoute(); // add this line to get route object
   const navigation = useNavigation();
   const [progresss, setProgresss] = useState("");
+  const [datee, setDatee] = useState("");
   const [descriptionn, setDescriptionn] = useState("");
   const [metricValue, setMetricValue] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  
   const dispatch = useDispatch();
   const challengeId = useSelector((state) => state.challenge.challengeId);
   
-    const handleLogProgress = useCallback((progresss, descriptionn) => {
+    const handleLogProgress = useCallback((progresss, descriptionn,datee) => {
     if (progresss !== "" && descriptionn !== "") {
+
         dispatch(setProgress(progresss));
         dispatch(setDescription(descriptionn));
+        dispatch(setDate(new Date().toISOString())); // <-- Fix here
         console.log(progresss);
         console.log(descriptionn);
+        console.log(datee);
         navigation.navigate('Take Photo');
     } else {
         Alert.alert( "Please fill out both progress and description fields.");
@@ -88,7 +93,7 @@ export default function LogProgress() {
       
       <TouchableOpacity
         style={styles.logProgressButton}
-        onPress={useCallback(() => handleLogProgress(progresss, descriptionn), [progresss, descriptionn])}
+        onPress={useCallback(() => handleLogProgress(progresss, descriptionn,datee), [progresss, descriptionn,datee])}
 
         underlayColor='#fff'
       >

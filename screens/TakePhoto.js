@@ -23,7 +23,7 @@ import { collection, doc, updateDoc,arrayUnion } from "firebase/firestore";
 import { storage, database } from "../config/firebase";
 import { useSelector,useDispatch } from 'react-redux';
 import { manipulateAsync } from "expo-image-manipulator";
-import { setProgress,setDescription} from "./challengeSlice"
+import { setProgress,setDescription,setDate} from "./challengeSlice"
 
 const firebaseConfig = {
   apiKey: Constants.manifest.extra.apiKey,
@@ -49,6 +49,7 @@ export default function TakePhoto() {
   const challengeId = useSelector((state) => state.challenge.challengeId);
   const progressLog = useSelector((state) => state.challenge.progressLog);
   const descriptionLog = useSelector((state) => state.challenge.descriptionLog);
+  const dateLog = useSelector((state) => state.challenge.dateLog);
 
   useEffect(() => {
     async function requestCameraPermissions() {
@@ -171,12 +172,14 @@ export default function TakePhoto() {
         console.log(challengeId);
         console.log(descriptionLog);
         console.log(progressLog)
+        console.log(dateLog);
   
         const docRef = doc(database, "userChallenges", challengeId);
         const data = {
           imageUrls: arrayUnion(uploadUrl),
           description: arrayUnion(descriptionLog),
-          progress: arrayUnion(progressLog)
+          progress: arrayUnion(progressLog),
+          date: arrayUnion(dateLog),
         };
   
         updateDoc(docRef, data).then(() => {

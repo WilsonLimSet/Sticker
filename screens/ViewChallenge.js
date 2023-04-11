@@ -19,7 +19,7 @@ export default function ViewChallenge({ route }) {
   const [photoUrls, setPhotoUrls] = useState([]);
   const [progressLog, setProgress] = useState([]);
   const [descriptionLog, setDescription] = useState([]);
-
+  const [dateLog, setDate] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation(); // add this line to get navigation object
   const [metricValue, setMetricValue] = useState("");
@@ -39,6 +39,7 @@ export default function ViewChallenge({ route }) {
           setPhotoUrls(challengeDoc.data().imageUrls);
           setProgress(challengeDoc.data().progress);
           setDescription(challengeDoc.data().description);
+          setDate(challengeDoc.data().date);
         } else {
           console.log('No challenge document found');
         }
@@ -70,15 +71,22 @@ export default function ViewChallenge({ route }) {
             sticky>
             <Text style={styles.logProgressText}>Log Progress</Text>
         </TouchableOpacity>
-      
     
-        {photoUrls.reverse().map((photoUrl, index) => (
-          <FeedComponent key={index} 
-          photoUrl={photoUrl} 
-          metricValue = {metricValue} 
-          progressLog = {progressLog[photoUrls.length - 1 - index]}
-          descriptionLog ={descriptionLog[photoUrls.length - 1 - index]}/>
-        ))}
+        {photoUrls && photoUrls.length > 0 ? (
+
+        photoUrls.reverse().map((photoUrl, index) => (
+          <FeedComponent key={index}
+            photoUrl={photoUrl}
+            metricValue={metricValue}
+            progressLog={progressLog[photoUrls.length - 1 - index]}
+            descriptionLog={descriptionLog[photoUrls.length - 1 - index]} 
+            dateLog = {dateLog[photoUrls.length - 1 - index]}/>
+        ))
+      ) : (
+        <View style={{ alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+          <Text style={styles.text}>No photos available for this challenge.</Text>
+        </View>
+      )}
       
       <TouchableOpacity
         style={styles.deleteChallengeButton}
@@ -89,9 +97,6 @@ export default function ViewChallenge({ route }) {
       </ScrollView>
     </View>
   );
-  
-      
-    
 }
 
 const styles = StyleSheet.create({
