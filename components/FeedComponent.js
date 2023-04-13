@@ -12,6 +12,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { database } from "../config/firebase";
 import colors from '../colors';
 import { getAuth } from "firebase/auth";
+
 import { formatDistance, parseISO } from 'date-fns';
 
 export default function FeedComponent({ photoUrl,progressLog,metricValue ,descriptionLog,dateLog}) {
@@ -32,7 +33,7 @@ export default function FeedComponent({ photoUrl,progressLog,metricValue ,descri
           <MaterialCommunityIcons style={styles.arrowIcon} name="chevron-right" color="white" size={25} />
         </View>
         <View style={styles.subContainer}>
-          <ScrollView horizontal={true}>
+          <ScrollView horizontal={true}  scrollEnabled={false}>
             <View style={styles.imageContainer}>
                 <View style={styles.imgContainer}>
                   <Image source={{ uri: photoUrl }} style={styles.img} />
@@ -53,15 +54,15 @@ const styles = StyleSheet.create({
       backgroundColor: colors.darkGray,
     },
     subContainer: {
-      marginTop: "5%",
-      paddingLeft: 18,
+      marginTop: "0.1%",
+      paddingLeft: 0,
       alignItems: 'center'
     },
     imageContainer: {
       flexDirection: 'row',
       flexWrap: 'wrap',
-      paddingTop: 10,
-      paddingBottom: 10,
+      paddingTop: 0.1,
+      paddingBottom: 0.1,
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -91,10 +92,10 @@ const styles = StyleSheet.create({
       marginBottom: "1%",
     },
     sectionIcon: {
-      marginRight: "4.5%",
+      marginRight: "0.5%",
     },
     arrowIcon: {
-      marginRight: 25,
+      marginRight: 5,
       marginLeft: "auto"
     },
     text: {
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
       marginBottom: 3,
     },
     activityFeed: {
-      marginTop: 15,
+      marginTop: 10,
       flex: 1
     },
     profile: {
@@ -111,6 +112,7 @@ const styles = StyleSheet.create({
       height: 28,
       borderRadius: 50,
       marginRight: 10,
+      marginLeft: 5
     },
     profileBar: {
       flexDirection: "row",
@@ -125,8 +127,9 @@ engagementButtons: {
     marginTop: "auto"
 },
 imageContainer: {
-    width: 235,
-    height: 235,
+     width: 390,
+     height: 435,
+   
     overflow: "hidden",
     borderRadius: 10,
     // flexBasis: "auto",

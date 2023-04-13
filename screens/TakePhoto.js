@@ -137,8 +137,8 @@ export default function TakePhoto() {
 
   const _takePhoto = async () => {
     let pickerResult = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
+      //allowsEditing: true,
+      // aspect: [4, 3],
     });
 
     _handleImagePicked(pickerResult);
@@ -147,8 +147,8 @@ export default function TakePhoto() {
   const _pickImage = async () => {
     
     let pickerResult = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
+      //allowsEditing: true,
+      // aspect: [4, 3],
     });
 
     console.log({ pickerResult });
@@ -165,7 +165,7 @@ export default function TakePhoto() {
          // compress the image
         const compressedImage = await manipulateAsync(
           asset.uri,
-          [{ resize: { width: 720 } }],
+          [{ resize: { width: 1020 } }],
           { compress: 0.25, format: "jpeg" }
         );
         const uploadUrl = await uploadImageAsync(compressedImage.uri);
