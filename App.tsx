@@ -9,6 +9,7 @@ import challengeReducer from './src/redux/challengeSlice'
 import { Explore } from './src/screens/explore/Explore';
 import { Activity } from './src/screens/activity/Activity';
 import { Create } from './src/screens/create/Create';
+import { Profile } from './src/screens/profile/Profile';
 
 const store = configureStore({
 	reducer: {
@@ -25,7 +26,8 @@ export default function App() {
 				{/* <Home /> */}
 				{/* <Explore /> */}
 				{/* <Activity /> */}
-				<Create />
+				{/* <Create /> */}
+				<Profile />
 			</View>
 		</Provider>
 	);
