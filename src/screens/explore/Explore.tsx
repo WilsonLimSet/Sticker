@@ -2,6 +2,9 @@ import { getAuth } from 'firebase/auth';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import { ScrollView, View, StyleSheet } from 'react-native';
+import { Sample } from './Sample';
+import { colors } from '../../styles/colors';
+import { database } from '../../api/firebase';
 
 interface ExploreProps {
 
