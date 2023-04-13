@@ -6,6 +6,9 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { configureStore } from "@reduxjs/toolkit";
 import challengeReducer from './src/redux/challengeSlice'
+import { Explore } from './src/screens/explore/Explore';
+import { Activity } from './src/screens/activity/Activity';
+import { Create } from './src/screens/create/Create';
 
 const store = configureStore({
 	reducer: {
@@ -19,7 +22,10 @@ export default function App() {
 			<View style={styles.container}>
 				{/* <SignUp /> */}
 				{/* <Login /> */}
-				<Home />
+				{/* <Home /> */}
+				{/* <Explore /> */}
+				{/* <Activity /> */}
+				<Create />
 			</View>
 		</Provider>
 	);
