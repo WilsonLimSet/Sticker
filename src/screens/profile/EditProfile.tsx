@@ -9,9 +9,7 @@ import {
   StyleSheet,
   Text,
   View,
-  LogBox,
   Alert,
-  Platform,
 } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import uuid from "uuid";
