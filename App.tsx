@@ -13,12 +13,6 @@ import { Profile } from "./src/screens/profile/Profile";
 import { Routes } from "./src/navigation/Routes";
 import { Providers } from "./src/navigation/Providers";
 
-const store = configureStore({
-    reducer: {
-        challenge: challengeReducer,
-    },
-});
-
 export default Providers;
 
 const styles = StyleSheet.create({

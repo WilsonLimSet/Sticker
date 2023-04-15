@@ -1,7 +1,7 @@
 export type AppParamList = {
-    Home: undefined;
+    HomeStack: undefined;
     Explore: undefined;
     Create: undefined;
     Activity: undefined;
-    Profile: undefined;
+    ProfileStack: undefined;
 };
