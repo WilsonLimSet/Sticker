@@ -7,8 +7,14 @@ import { database } from "../../api/firebase";
 import { useDispatch } from "react-redux";
 import { setChallengeId } from "../../redux/challengeSlice";
 import { Created } from "./Created";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RouteProp } from "@react-navigation/native";
+import { HomeParamList } from "../../navigation/app-nav/HomeParamList";
 
-interface HomeProps {}
+interface HomeProps {
+    navigation: StackNavigationProp<HomeParamList, "Home">;
+    route: RouteProp<HomeParamList, "Home">;
+}
 
 export const Home: React.FC<HomeProps> = ({ navigation }) => {
     const dispatch = useDispatch();

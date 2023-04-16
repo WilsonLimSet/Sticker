@@ -16,8 +16,14 @@ import {
 import { doc, getDoc } from "firebase/firestore";
 import { database } from "../../../api/firebase";
 import { colors } from "../../../styles/colors";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { HomeParamList } from "../../../navigation/app-nav/HomeParamList";
+import { RouteProp } from "@react-navigation/native";
 
-interface LogProgressProps {}
+interface LogProgressProps {
+    navigation: StackNavigationProp<HomeParamList, "LogProgress">;
+    route: RouteProp<HomeParamList, "LogProgress">;
+}
 
 export const LogProgress: React.FC<LogProgressProps> = ({
     navigation,
@@ -93,7 +99,7 @@ export const LogProgress: React.FC<LogProgressProps> = ({
                 placeholder="Enter your progress"
                 autoCapitalize="none"
                 keyboardType="numeric"
-                textContentType="none"  
+                textContentType="none"
                 autoFocus={true}
                 value={progresss}
                 onChangeText={(text) => {
@@ -121,7 +127,7 @@ export const LogProgress: React.FC<LogProgressProps> = ({
                 placeholder="Description"
                 autoCapitalize="none"
                 keyboardType="default"
-                textContentType="none"  
+                textContentType="none"
                 autoFocus={true}
                 value={descriptionn}
                 onChangeText={(text) => setDescriptionn(text)}

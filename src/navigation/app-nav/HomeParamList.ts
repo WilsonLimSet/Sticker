@@ -1,7 +1,7 @@
 export type HomeParamList = {
     Home: undefined;
     ViewChallenge: { id: string };
-    LogProgress: undefined;
-    TakePhoto: undefined;
-    DeleteChallenge: undefined;
+    LogProgress: { id: string };
+    TakePhoto: { id: string };
+    DeleteChallenge: { id: string };
 };

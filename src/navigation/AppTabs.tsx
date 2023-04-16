@@ -8,6 +8,7 @@ import { HomeStack } from "./app-nav/HomeStack";
 import { ProfileStack } from "./app-nav/ProfileStack";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { colors } from "../styles/colors";
+import { RouteProp } from "@react-navigation/native";
 
 interface AppTabsProps {}
 

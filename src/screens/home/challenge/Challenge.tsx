@@ -8,15 +8,21 @@ import {
     Text,
 } from "react-native";
 import { useDispatch } from "react-redux";
-import { storage,database } from "../../../api/firebase";
+import { storage, database } from "../../../api/firebase";
 import { colors } from "../../../styles/colors";
 import { FeedItem } from "../../../ui/FeedItem";
+import { HomeParamList } from "../../../navigation/app-nav/HomeParamList";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RouteProp } from "@react-navigation/native";
 
-interface ChallengeProps {}
+interface ChallengeProps {
+    navigation: StackNavigationProp<HomeParamList, "ViewChallenge">;
+    route: RouteProp<HomeParamList, "ViewChallenge">;
+}
 
 export const Challenge: React.FC<ChallengeProps> = ({ navigation, route }) => {
     //console.log("PARAMS: ", route.params);
-    const [challengeId, setChallengeId] = useState(null);
+    const [challengeId, setChallengeId] = useState(route.params.id);
     const [photoUrls, setPhotoUrls] = useState([]);
     const [progressLog, setProgress] = useState([]);
     const [descriptionLog, setDescription] = useState([]);
@@ -43,7 +49,6 @@ export const Challenge: React.FC<ChallengeProps> = ({ navigation, route }) => {
                     // console.log("Progress: ", challengeDoc.data().progress);
                     // console.log("Description: ", challengeDoc.data().description);
                     // console.log("Date: ", challengeDoc.data().date);
-                   
                 } else {
                     console.log("No challenge document found");
                 }
@@ -51,15 +56,14 @@ export const Challenge: React.FC<ChallengeProps> = ({ navigation, route }) => {
                 console.log("Error fetching challenge:", error);
             } finally {
                 setIsLoading(false);
-             }
+            }
         };
         fetchChallenge();
-    }, [route.params]);
+    }, []);
 
     useEffect(() => {
         console.log("ProgressLog: ", progressLog);
     }, [progressLog]);
-    
 
     if (isLoading) {
         return (
@@ -79,46 +83,46 @@ export const Challenge: React.FC<ChallengeProps> = ({ navigation, route }) => {
                     underlayColor="#fff"
                     sticky
                 >
-                    
                     <Text style={styles.logProgressText}>Log Progress</Text>
                 </TouchableOpacity>
-            {photoUrls && photoUrls.length > 0 && (
-                console.log("photoUrls: ", photoUrls),
-                console.log("photoUrls.length: ", photoUrls.length),
-                console.log("description",descriptionLog[0])
-            )}
-             {
-  photoUrls && photoUrls.length > 0 ? (
-    photoUrls
-      .reverse()
-      .map((photoUrl, index) => {
-        const reversedIndex = photoUrls.length - 1 - index;
-        return (
-          <FeedItem
-            key={index}
-            photoUrl={photoUrl}
-            metricValue={metricValue}
-            progressLog={progressLog ? progressLog[reversedIndex] : undefined}
-            descriptionLog={descriptionLog ? descriptionLog[reversedIndex] : undefined}
-            dateLog={dateLog ? dateLog[reversedIndex] : undefined}
-          />
-        );
-      })
-  ) : (
-    <View
-      style={{
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 20,
-      }}
-    >
-      <Text style={styles.text}>
-        No photos available for this challenge.
-      </Text>
-    </View>
-  )
-}
 
+                {photoUrls && photoUrls.length > 0 ? (
+                    photoUrls.reverse().map((photoUrl, index) => {
+                        const reversedIndex = photoUrls.length - 1 - index;
+                        return (
+                            <FeedItem
+                                key={index}
+                                photoUrl={photoUrl}
+                                metricValue={metricValue}
+                                progressLog={
+                                    progressLog
+                                        ? progressLog[reversedIndex]
+                                        : undefined
+                                }
+                                descriptionLog={
+                                    descriptionLog
+                                        ? descriptionLog[reversedIndex]
+                                        : undefined
+                                }
+                                dateLog={
+                                    dateLog ? dateLog[reversedIndex] : undefined
+                                }
+                            />
+                        );
+                    })
+                ) : (
+                    <View
+                        style={{
+                            alignItems: "center",
+                            justifyContent: "center",
+                            padding: 20,
+                        }}
+                    >
+                        <Text style={styles.text}>
+                            No photos available for this challenge.
+                        </Text>
+                    </View>
+                )}
 
                 <TouchableOpacity
                     style={styles.deleteChallengeButton}

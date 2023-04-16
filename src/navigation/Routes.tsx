@@ -10,14 +10,14 @@ import { AuthStack } from "./AuthStack";
 interface RoutesProps {}
 
 export const Routes: React.FC<RoutesProps> = ({}) => {
-    const { user, setUser } = useContext(AuthContext);
+    const { user, login, logout } = useContext(AuthContext);
     const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
         // onAuthStateChanged returns an unsubscriber
         const unsubscribeAuth = onAuthStateChanged(
             auth,
             async (authenticatedUser) => {
-                authenticatedUser ? setUser(authenticatedUser) : setUser(null);
+                authenticatedUser ? login(authenticatedUser) : logout(null);
                 setIsLoading(false);
             }
         );
