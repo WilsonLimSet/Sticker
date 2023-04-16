@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { ScrollView, View, StyleSheet } from "react-native";
 import { colors } from "../../styles/colors";
 import { getAuth } from "firebase/auth";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import {
+    collection,
+    onSnapshot,
+    orderBy,
+    query,
+    where,
+} from "firebase/firestore";
 import { database } from "../../api/firebase";
 import { useDispatch } from "react-redux";
 import { setChallengeId } from "../../redux/challengeSlice";
@@ -27,7 +33,10 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
 
     useEffect(() => {
         const collectionRef = collection(database, "userChallenges");
-        const q = query(collectionRef, orderBy("name", "desc"));
+        const q = query(
+            collectionRef,
+            where("friends", "array-contains", user?.uid)
+        );
 
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             console.log("querySnapshot unsusbscribe");

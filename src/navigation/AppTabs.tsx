@@ -9,6 +9,7 @@ import { ProfileStack } from "./app-nav/ProfileStack";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { colors } from "../styles/colors";
 import { RouteProp } from "@react-navigation/native";
+import { CreateStack } from "./app-nav/CreateStack";
 
 interface AppTabsProps {}
 
@@ -60,8 +61,9 @@ export const AppTabs: React.FC<AppTabsProps> = ({ routeName }) => {
             />
             <Tabs.Screen
                 name="Create"
-                component={Create}
+                component={CreateStack}
                 options={{
+                    headerShown: false,
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons
                             name="plus-circle"
@@ -88,6 +90,7 @@ export const AppTabs: React.FC<AppTabsProps> = ({ routeName }) => {
                 name="ProfileStack"
                 component={ProfileStack}
                 options={{
+                    headerShown: false,
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons
                             name="account-circle"

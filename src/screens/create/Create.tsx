@@ -1,102 +1,92 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { auth, database } from "../../api/firebase";
-import * as Clipboard from "expo-clipboard";
-import { addDoc, collection, updateDoc } from "firebase/firestore";
-import { TextInput, View, Text, StyleSheet, Button } from "react-native";
+import {
+    DocumentReference,
+    addDoc,
+    collection,
+    doc,
+    updateDoc,
+} from "firebase/firestore";
+import {
+    TextInput,
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    Alert,
+} from "react-native";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { colors } from "../../styles/colors";
 import DropDownPicker from "react-native-dropdown-picker";
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { CreateParamList } from "../../navigation/app-nav/CreateParamList";
 
-interface CreateProps {}
+interface CreateProps {
+    navigation: StackNavigationProp<CreateParamList, "Create">;
+    route: RouteProp<CreateParamList, "Create">;
+}
 
-export const Create: React.FC<CreateProps> = ({}) => {
+const metricItems = [
+    { label: "Minutes", value: "minutes" },
+    { label: "Days", value: "days" },
+    { label: "Miles", value: "miles" },
+    { label: "Pounds", value: "pounds" },
+    { label: "Custom", value: "custom" },
+    { label: "Hours", value: "hours" },
+];
+
+const durationItems = [
+    { label: "7", value: "7" },
+    { label: "14", value: "14" },
+    { label: "30", value: "30" },
+    { label: "100", value: "100" },
+];
+
+export const Create: React.FC<CreateProps> = ({ navigation }) => {
     const user = auth.currentUser;
 
-    const [title, onChangeTitle] = useState(null);
-    const [text, onChangeText] = useState(null);
+    const [title, setTitle] = useState("");
+    const [desc, setDesc] = useState("");
+    const [metric, setMetric] = useState("");
+    const [customMetric, setCustomMetric] = useState("");
+    const [duration, setDuration] = useState("");
 
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
-    const [items, setItems] = useState([
-        { label: "Minutes", value: "minutes" },
-        { label: "Days", value: "days" },
-        { label: "Miles", value: "miles" },
-        { label: "Pounds", value: "pounds" },
-        { label: "Custom", value: "custom" },
-        { label: "Hours", value: "hours" },
-    ]);
-
-    const [openDuration, setDurationOpen] = useState(false);
-    const [valueDuration, setDurationValue] = useState(null);
-    const [itemsDuration, setDurationItems] = useState([
-        { label: "7", value: "7" },
-        { label: "14", value: "14" },
-        { label: "30", value: "30" },
-        { label: "100", value: "100" },
-    ]);
-
-    const [openFriends, setFriendsOpen] = useState(false);
-    const [valueFriends, setFriendsValue] = useState(null);
-    const [itemsFriends, setFriendsItems] = useState([
-        { label: "Sarah", value: "sarah" },
-        { label: "Sophia", value: "sophia" },
-        { label: "Xin", value: "xin" },
-        { label: "Wilson", value: "wilson" },
-    ]);
-
-    // if open is already true, close all others
-    const onMetricOpen = useCallback(() => {
-        setFriendsOpen(false);
-        setDurationOpen(false);
-    }, []);
-
-    const onFriendsOpen = useCallback(() => {
-        setOpen(false);
-        setDurationOpen(false);
-    }, []);
-
-    const onDurationOpen = useCallback(() => {
-        setOpen(false);
-        setFriendsOpen(false);
-    }, []);
-
-    const copyToClipboard = () => {
-        Clipboard.setStringAsync("https://join.sticker.me/89L8d5fhj4");
-    };
-
-    ////////////////////////////////////////////NEW STUFF
-
-    const [newItem, setNewItem] = React.useState({
-        name: "",
-        description: "",
-        duration: 0,
-        metric: "",
-        friends: [],
-        custom: false,
-        createdAt: new Date(),
-    });
-
-    const handlePick = () => {
-        setNewItem({
-            ...newItem,
-        });
-    };
+    // Drop Down Picker open state
+    const [open1, setOpen1] = useState(false);
+    const [open2, setOpen2] = useState(false);
 
     const onSend = async () => {
-        setNewItem({ ...newItem, friends: [user.uid] });
-        addDoc(collection(database, "userChallenges"), newItem).then(
-            (docRef) => {
-                let challengeId = docRef._key.path.segments[1];
-                let shareCode = challengeId.slice(0, 5);
-                console.log(challengeId);
-                console.log(shareCode);
-                updateDoc(doc(database, "userChallenges", challengeId), {
-                    shareCode,
-                });
-            }
-        );
-        // TODO: NAV
-        // navigation.goBack();
+        if (title === "" || desc === "" || metric === "" || duration === "") {
+            Alert.alert("Please fill out all fields");
+        } else {
+            const challengeObj = {
+                name: title,
+                description: desc,
+                duration: parseInt(duration),
+                metric: metric === "custom" ? customMetric : metric,
+                friends: [user?.uid],
+                custom: metric === "custom" ? true : false,
+                createdAt: new Date(),
+            };
+
+            console.log(challengeObj);
+            addDoc(collection(database, "userChallenges"), challengeObj).then(
+                (docRef: DocumentReference) => {
+                    let challengeId = docRef.id;
+                    var shareCode = challengeId.slice(0, 6);
+                    updateDoc(doc(database, "userChallenges", challengeId), {
+                        shareCode,
+                    });
+                    setTitle("");
+                    setDesc("");
+                    setMetric("");
+                    setCustomMetric("");
+                    setDuration("");
+                    navigation.navigate("Share", { code: shareCode });
+                }
+            );
+        }
     };
 
     return (
@@ -105,21 +95,16 @@ export const Create: React.FC<CreateProps> = ({}) => {
                 <Text style={styles.title}>Create New Challenge</Text>
                 <TextInput
                     style={styles.titleInput}
-                    //onChangeText={onChangeTitle}
-                    onChangeText={(text) =>
-                        setNewItem({ ...newItem, name: text })
-                    }
-                    value={title}
+                    onChangeText={(title) => setTitle(title)}
                     placeholder="| Challenge Title"
+                    value={title}
                     autoCorrect={false}
                 />
                 <TextInput
                     style={styles.input}
-                    onChangeText={(text) =>
-                        setNewItem({ ...newItem, description: text })
-                    }
-                    value={text}
+                    onChangeText={(desc) => setDesc(desc)}
                     placeholder="Enter description for this challenge"
+                    value={desc}
                 />
             </View>
 
@@ -133,33 +118,21 @@ export const Create: React.FC<CreateProps> = ({}) => {
                     />
                     <Text style={styles.sectionTitle}>Select Goal Metric</Text>
                 </View>
-                <View style={styles.dropDownContainer}>
+                <View>
                     <DropDownPicker
-                        open={open}
-                        value={value}
-                        items={items}
-                        setOpen={setOpen}
-                        setValue={setValue}
-                        setItems={setItems}
+                        open={open1}
+                        value={metric}
+                        items={metricItems}
+                        setOpen={setOpen1}
+                        setValue={setMetric}
                         placeholder="Select Metric"
                         placeholderStyle={{ color: colors.placeholderGray }}
-                        //onOpen={onMetricOpen}
-                        onChangeValue={(value) => {
-                            if (value === "custom") {
-                                setNewItem({ ...newItem, custom: true });
-                            } else {
-                                setNewItem({
-                                    ...newItem,
-                                    metric: value,
-                                    custom: false,
-                                });
-                            }
-                        }}
+                        onOpen={() => setOpen2(false)}
                     />
                 </View>
             </View>
 
-            {newItem.custom && (
+            {metric === "custom" && (
                 <View style={styles.section}>
                     <View style={styles.iconTitle}>
                         <FontAwesome
@@ -173,30 +146,13 @@ export const Create: React.FC<CreateProps> = ({}) => {
                         </Text>
                     </View>
 
-                    <View style={styles.dropDownContainer}>
+                    <View>
                         <TextInput
                             style={styles.textInput}
-                            onChangeText={(text) =>
-                                setNewItem({ ...newItem, metric: text })
-                            }
-                            value={title}
+                            onChangeText={(text) => setCustomMetric(text)}
                             placeholder="custom metric"
                             autoCorrect={false}
                         />
-                        {/* <DropDownPicker
-							open={open}
-							value={value}
-							items={items}
-							setOpen={setOpen}
-							setValue={setValue}
-							setItems={setItems}
-							placeholder='Custom Metric Name'
-							placeholderStyle={{ color: colors.placeholderGray }}
-							//onOpen={onMetricOpen}
-							onChangeValue={(value) =>
-								setNewItem({ ...newItem, metric: value })
-							}
-						/> */}
                     </View>
                 </View>
             )}
@@ -212,34 +168,23 @@ export const Create: React.FC<CreateProps> = ({}) => {
                         />
                         <Text style={styles.sectionTitle}>Duration</Text>
                     </View>
-                    <View style={styles.dropDownContainer}>
+                    <View>
                         <DropDownPicker
-                            open={openDuration}
-                            value={valueDuration}
-                            items={itemsDuration}
-                            setOpen={setDurationOpen}
-                            setValue={setDurationValue}
-                            setItems={setDurationItems}
+                            open={open2}
+                            value={duration}
+                            items={durationItems}
+                            setOpen={setOpen2}
+                            setValue={setDuration}
                             placeholder="Select Number of Days"
                             placeholderStyle={{ color: colors.placeholderGray }}
-                            //onOpen={onDurationOpen}
-                            // onChangeValue = {}
-                            //onChangeText= {(text) => setNewItem({...newItem, title: text})}
-                            onChangeValue={(value) =>
-                                setNewItem({ ...newItem, duration: value })
-                            }
-                            //onOpen = {(setItems) => setNewItem({...newItem, duration:setItems.value, items:setItems})}
                         />
                     </View>
                 </View>
 
                 <View style={styles.beginChallengeButton}>
-                    <Button
-                        onPress={onSend}
-                        title="Create Challenge"
-                        buttonStyle={{ backgroundColor: "white" }}
-                        titleProps={{ style: { color: "black" } }}
-                    />
+                    <TouchableOpacity onPress={onSend}>
+                        <Text>Create Challenge</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </View>
