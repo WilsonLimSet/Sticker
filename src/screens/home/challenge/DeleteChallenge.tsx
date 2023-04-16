@@ -1,22 +1,22 @@
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { doc, deleteDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
 import { database } from "../../../api/firebase";
 import { colors } from "../../../styles/colors";
+import { HomeParamList } from "../../../navigation/app-nav/HomeParamList";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-interface DeleteChallengeProps {}
+interface DeleteChallengeProps {
+    navigation: StackNavigationProp<HomeParamList, "DeleteChallenge">;
+    route: RouteProp<HomeParamList, "DeleteChallenge">;
+}
 
-export const DeleteChallenge: React.FC<DeleteChallengeProps> = ({}) => {
-    const [challengeId, setChallengeId] = useState(null);
-    const navigation = useNavigation();
-    const route = useRoute(); // add this line to get route object
-
-    useEffect(() => {
-        const { id } = route.params;
-        console.log(id);
-        setChallengeId(id);
-    }, []);
+export const DeleteChallenge: React.FC<DeleteChallengeProps> = ({
+    navigation,
+    route,
+}) => {
+    const [challengeId, setChallengeId] = useState(route.params.id);
 
     const handleDelete = async () => {
         try {

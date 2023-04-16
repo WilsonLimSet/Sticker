@@ -14,29 +14,30 @@ import {
     LogBox,
     Text,
 } from "react-native";
-import { useSelector ,useDispatch} from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { storage, database } from "../../../api/firebase";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import { getApps, initializeApp } from "firebase/app";
-import 'react-native-get-random-values'
-import { v4 as uuid } from 'uuid'
+import "react-native-get-random-values";
+import { v4 as uuid } from "uuid";
 
-
-import { setProgress,setDescription,setDate} from "../../../redux/challengeSlice";  
-
-
+import {
+    setProgress,
+    setDescription,
+    setDate,
+} from "../../../redux/challengeSlice";
 
 interface TakePhotoProps {}
 
 const firebaseConfig = {
-    apiKey: Constants.manifest.extra.apiKey,
-    authDomain: Constants.manifest.extra.authDomain,
-    projectId: Constants.manifest.extra.projectId,
-    storageBucket: Constants.manifest.extra.storageBucket,
-    messagingSenderId: Constants.manifest.extra.messagingSenderId,
-    appId: Constants.manifest.extra.appId,
-    databaseURL: Constants.manifest.extra.databaseURL,
+    apiKey: Constants.manifest!.extra!.apiKey,
+    authDomain: Constants.manifest!.extra!.authDomain,
+    projectId: Constants.manifest!.extra!.projectId,
+    storageBucket: Constants.manifest!.extra!.storageBucket,
+    messagingSenderId: Constants.manifest!.extra!.messagingSenderId,
+    appId: Constants.manifest!.extra!.appId,
+    databaseURL: Constants.manifest!.extra!.databaseURL,
 };
 
 if (!getApps().length) {
