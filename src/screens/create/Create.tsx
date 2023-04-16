@@ -13,6 +13,7 @@ import {
     Text,
     StyleSheet,
     TouchableOpacity,
+    Alert,
 } from "react-native";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { colors } from "../../styles/colors";
@@ -56,32 +57,36 @@ export const Create: React.FC<CreateProps> = ({ navigation }) => {
     const [open2, setOpen2] = useState(false);
 
     const onSend = async () => {
-        const challengeObj = {
-            name: title,
-            description: desc,
-            duration: parseInt(duration),
-            metric: metric === "custom" ? customMetric : metric,
-            friends: [user?.uid],
-            custom: metric === "custom" ? true : false,
-            createdAt: new Date(),
-        };
+        if (title === "" || desc === "" || metric === "" || duration === "") {
+            Alert.alert("Please fill out all fields");
+        } else {
+            const challengeObj = {
+                name: title,
+                description: desc,
+                duration: parseInt(duration),
+                metric: metric === "custom" ? customMetric : metric,
+                friends: [user?.uid],
+                custom: metric === "custom" ? true : false,
+                createdAt: new Date(),
+            };
 
-        console.log(challengeObj);
-        addDoc(collection(database, "userChallenges"), challengeObj).then(
-            (docRef: DocumentReference) => {
-                let challengeId = docRef.id;
-                var shareCode = challengeId.slice(0, 6);
-                updateDoc(doc(database, "userChallenges", challengeId), {
-                    shareCode,
-                });
-                setTitle("");
-                setDesc("");
-                setMetric("");
-                setCustomMetric("");
-                setDuration("");
-                navigation.navigate("Share", { code: shareCode });
-            }
-        );
+            console.log(challengeObj);
+            addDoc(collection(database, "userChallenges"), challengeObj).then(
+                (docRef: DocumentReference) => {
+                    let challengeId = docRef.id;
+                    var shareCode = challengeId.slice(0, 6);
+                    updateDoc(doc(database, "userChallenges", challengeId), {
+                        shareCode,
+                    });
+                    setTitle("");
+                    setDesc("");
+                    setMetric("");
+                    setCustomMetric("");
+                    setDuration("");
+                    navigation.navigate("Share", { code: shareCode });
+                }
+            );
+        }
     };
 
     return (
