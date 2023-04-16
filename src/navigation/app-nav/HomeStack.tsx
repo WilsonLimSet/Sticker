@@ -13,7 +13,7 @@ const Stack = createStackNavigator<HomeParamList>();
 
 export const HomeStack: React.FC<HomeStackProps> = ({}) => {
     return (
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName="Home">
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="ViewChallenge" component={Challenge} />
             <Stack.Screen name="LogProgress" component={LogProgress} />

@@ -5,18 +5,27 @@ import { doc, arrayUnion, updateDoc } from "firebase/firestore";
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
 import React, { useEffect, useState } from "react";
 import {
+    StyleSheet,
     Platform,
     View,
     ActivityIndicator,
     Share,
     Alert,
     LogBox,
+    Text,
 } from "react-native";
-import { useSelector } from "react-redux";
-import { database } from "../../../api/firebase";
+import { useSelector ,useDispatch} from "react-redux";
+import { storage, database } from "../../../api/firebase";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import { getApps, initializeApp } from "firebase/app";
+import 'react-native-get-random-values'
+import { v4 as uuid } from 'uuid'
+
+
+import { setProgress,setDescription,setDate} from "../../../redux/challengeSlice";  
+
+
 
 interface TakePhotoProps {}
 
@@ -140,8 +149,8 @@ export const TakePhoto: React.FC<TakePhotoProps> = ({}) => {
 
     const _takePhoto = async () => {
         let pickerResult = await ImagePicker.launchCameraAsync({
-            allowsEditing: true,
-            aspect: [4, 3],
+            // allowsEditing: true,
+            // aspect: [4, 3],
         });
 
         _handleImagePicked(pickerResult);
@@ -201,7 +210,7 @@ export const TakePhoto: React.FC<TakePhotoProps> = ({}) => {
                 navigation.navigate("Home");
             } else {
                 // Navigate to "Log Progress" when the user cancels the image picker
-                navigation.navigate("Log Progress");
+                navigation.navigate("LogProgress");
             }
         } catch (error) {
             console.log(error);
@@ -236,7 +245,7 @@ async function uploadImageAsync(uri) {
         xhr.open("GET", uri, true);
         xhr.send(null);
     });
-    const filename = uuid.v4();
+    const filename = uuid();
 
     const fileRef = ref(getStorage(), `images/${filename}`);
     const result = await uploadBytes(fileRef, blob);

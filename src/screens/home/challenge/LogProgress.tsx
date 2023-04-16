@@ -93,7 +93,7 @@ export const LogProgress: React.FC<LogProgressProps> = ({
                 placeholder="Enter your progress"
                 autoCapitalize="none"
                 keyboardType="numeric"
-                textContentType="name"
+                textContentType="none"  
                 autoFocus={true}
                 value={progresss}
                 onChangeText={(text) => {
@@ -120,8 +120,8 @@ export const LogProgress: React.FC<LogProgressProps> = ({
                 style={styles.input}
                 placeholder="Description"
                 autoCapitalize="none"
-                keyboardType="name"
-                textContentType="name"
+                keyboardType="default"
+                textContentType="none"  
                 autoFocus={true}
                 value={descriptionn}
                 onChangeText={(text) => setDescriptionn(text)}

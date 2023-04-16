@@ -2,30 +2,28 @@ import { getAuth } from "firebase/auth";
 import React from "react";
 import { View, ScrollView, Text, StyleSheet, Image } from "react-native";
 import { colors } from "../styles/colors";
-import MaterialCommunityIcons from "@expo/vector-icons";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 import { formatDistance, parseISO } from "date-fns";
 
-interface FeedItemProps {}
+interface FeedItemProps {
+  photoUrl?: string;
+  progressLog?: string;
+  metricValue?: string;
+  descriptionLog?: string;
+  dateLog?: string;
+}
 
 export const FeedItem: React.FC<FeedItemProps> = ({
-    photoUrl,
-    progressLog,
-    metricValue,
-    descriptionLog,
-    dateLog,
+    photoUrl = "",
+    metricValue = "",
+    progressLog = "",
+    descriptionLog = "",
+    dateLog = "",
 }) => {
-    console.log("PHOTO URL: ", photoUrl);
-    console.log("PROGRESS LOG: ", progressLog);
-    console.log("METRIC VALUE: ", metricValue);
-    console.log("DESCRIPTION LOG: ", descriptionLog);
-    console.log("DATE LOG: ", dateLog);
-
     const authh = getAuth();
-    const user = authh.currentUser;
-    const profileImageUrl = user.photoURL;
-    const realdateLog = formatDistance(parseISO(dateLog), new Date(), {
-        addSuffix: true,
-    });
+    const user = authh?.currentUser;
+    const profileImageUrl = user?.photoURL;
+   
 
     return (
         <View style={styles.container}>
@@ -37,10 +35,10 @@ export const FeedItem: React.FC<FeedItemProps> = ({
                     />
                     <View>
                         <Text style={styles.text}>
-                            {authh?.currentUser?.displayName} - {realdateLog}{" "}
+                            {authh?.currentUser?.displayName} - {dateLog}{" "}
                         </Text>
                         <Text style={{ color: "white", fontSize: 10 }}>
-                            {progressLog} {metricValue} - {descriptionLog}
+                            {progressLog ?? ""} {metricValue ?? ""} - {descriptionLog ?? ""}
                         </Text>
                     </View>
                     <MaterialCommunityIcons
@@ -66,7 +64,6 @@ export const FeedItem: React.FC<FeedItemProps> = ({
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,

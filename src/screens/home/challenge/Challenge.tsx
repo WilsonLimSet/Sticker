@@ -8,14 +8,14 @@ import {
     Text,
 } from "react-native";
 import { useDispatch } from "react-redux";
-import { database } from "../../../api/firebase";
+import { storage,database } from "../../../api/firebase";
 import { colors } from "../../../styles/colors";
 import { FeedItem } from "../../../ui/FeedItem";
 
 interface ChallengeProps {}
 
 export const Challenge: React.FC<ChallengeProps> = ({ navigation, route }) => {
-    console.log("PARAMS: ", route.params);
+    //console.log("PARAMS: ", route.params);
     const [challengeId, setChallengeId] = useState(null);
     const [photoUrls, setPhotoUrls] = useState([]);
     const [progressLog, setProgress] = useState([]);
@@ -23,8 +23,6 @@ export const Challenge: React.FC<ChallengeProps> = ({ navigation, route }) => {
     const [dateLog, setDate] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [metricValue, setMetricValue] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-    const dispatch = useDispatch();
 
     useEffect(() => {
         const { id } = route.params;
@@ -37,16 +35,15 @@ export const Challenge: React.FC<ChallengeProps> = ({ navigation, route }) => {
                     const metric = challengeDoc.data().metric;
                     setMetricValue(metric);
                     setChallengeId(id);
-                    // console.log(id);
-                    // console.log(challengeDoc.data().imageUrls);
-                    // console.log(challengeDoc.data().progress);
-                    // console.log(challengeDoc.data().date);
-                    const dl = challengeDoc.data().date;
-                    setDate(dl);
-                    const urls = challengeDoc.data().imageUrls;
-                    setPhotoUrls(urls);
+                    setPhotoUrls(challengeDoc.data().imageUrls);
                     setProgress(challengeDoc.data().progress);
                     setDescription(challengeDoc.data().description);
+                    setDate(challengeDoc.data().date);
+                    // console.log("Photo URLs: ", challengeDoc.data().imageUrls);
+                    // console.log("Progress: ", challengeDoc.data().progress);
+                    // console.log("Description: ", challengeDoc.data().description);
+                    // console.log("Date: ", challengeDoc.data().date);
+                   
                 } else {
                     console.log("No challenge document found");
                 }
@@ -54,14 +51,15 @@ export const Challenge: React.FC<ChallengeProps> = ({ navigation, route }) => {
                 console.log("Error fetching challenge:", error);
             } finally {
                 setIsLoading(false);
-                console.log("DATE LOG: ", dateLog);
-                console.log("PROGRESS LOG: ", progressLog);
-                console.log("DESCRIPTION LOG: ", descriptionLog);
-                console.log("PHOTO URLS: ", photoUrls);
-            }
+             }
         };
         fetchChallenge();
     }, [route.params]);
+
+    useEffect(() => {
+        console.log("ProgressLog: ", progressLog);
+    }, [progressLog]);
+    
 
     if (isLoading) {
         return (
@@ -81,39 +79,46 @@ export const Challenge: React.FC<ChallengeProps> = ({ navigation, route }) => {
                     underlayColor="#fff"
                     sticky
                 >
+                    
                     <Text style={styles.logProgressText}>Log Progress</Text>
                 </TouchableOpacity>
-                {/* 
-                {photoUrls && photoUrls.length > 0 ? (
-                    photoUrls
-                        .reverse()
-                        .map((photoUrl, index) => (
-                            <FeedItem
-                                key={index}
-                                photoUrl={photoUrl}
-                                metricValue={metricValue}
-                                progressLog={
-                                    progressLog[photoUrls.length - 1 - index]
-                                }
-                                descriptionLog={
-                                    descriptionLog[photoUrls.length - 1 - index]
-                                }
-                                dateLog={dateLog[photoUrls.length - 1 - index]}
-                            />
-                        ))
-                ) : ( */}
-                <View
-                    style={{
-                        alignItems: "center",
-                        justifyContent: "center",
-                        padding: 20,
-                    }}
-                >
-                    <Text style={styles.text}>
-                        No photos available for this challenge.
-                    </Text>
-                </View>
-                {/* )} */}
+            {photoUrls && photoUrls.length > 0 && (
+                console.log("photoUrls: ", photoUrls),
+                console.log("photoUrls.length: ", photoUrls.length),
+                console.log("description",descriptionLog[0])
+            )}
+             {
+  photoUrls && photoUrls.length > 0 ? (
+    photoUrls
+      .reverse()
+      .map((photoUrl, index) => {
+        const reversedIndex = photoUrls.length - 1 - index;
+        return (
+          <FeedItem
+            key={index}
+            photoUrl={photoUrl}
+            metricValue={metricValue}
+            progressLog={progressLog ? progressLog[reversedIndex] : undefined}
+            descriptionLog={descriptionLog ? descriptionLog[reversedIndex] : undefined}
+            dateLog={dateLog ? dateLog[reversedIndex] : undefined}
+          />
+        );
+      })
+  ) : (
+    <View
+      style={{
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 20,
+      }}
+    >
+      <Text style={styles.text}>
+        No photos available for this challenge.
+      </Text>
+    </View>
+  )
+}
+
 
                 <TouchableOpacity
                     style={styles.deleteChallengeButton}
