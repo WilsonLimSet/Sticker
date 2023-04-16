@@ -21,6 +21,8 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { CreateParamList } from "../../navigation/app-nav/CreateParamList";
+import CalendarPicker from 'react-native-calendar-picker';
+
 
 interface CreateProps {
     navigation: StackNavigationProp<CreateParamList, "Create">;
@@ -169,15 +171,9 @@ export const Create: React.FC<CreateProps> = ({ navigation }) => {
                         <Text style={styles.sectionTitle}>Duration</Text>
                     </View>
                     <View>
-                        <DropDownPicker
-                            open={open2}
-                            value={duration}
-                            items={durationItems}
-                            setOpen={setOpen2}
-                            setValue={setDuration}
-                            placeholder="Select Number of Days"
-                            placeholderStyle={{ color: colors.placeholderGray }}
-                        />
+                       
+                            
+                        
                     </View>
                 </View>
 
