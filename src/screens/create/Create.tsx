@@ -74,7 +74,11 @@ export const Create: React.FC<CreateProps> = ({ navigation }) => {
                 updateDoc(doc(database, "userChallenges", challengeId), {
                     shareCode,
                 });
-
+                setTitle("");
+                setDesc("");
+                setMetric("");
+                setCustomMetric("");
+                setDuration("");
                 navigation.navigate("Share", { code: shareCode });
             }
         );
@@ -88,12 +92,14 @@ export const Create: React.FC<CreateProps> = ({ navigation }) => {
                     style={styles.titleInput}
                     onChangeText={(title) => setTitle(title)}
                     placeholder="| Challenge Title"
+                    value={title}
                     autoCorrect={false}
                 />
                 <TextInput
                     style={styles.input}
                     onChangeText={(desc) => setDesc(desc)}
                     placeholder="Enter description for this challenge"
+                    value={desc}
                 />
             </View>
 
