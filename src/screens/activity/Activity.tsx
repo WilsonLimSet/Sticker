@@ -1,16 +1,54 @@
-import React from 'react'
-import { View, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { getDocs, collection } from 'firebase/firestore';
+import { database } from '../../api/firebase';
+import { FeedItem } from '../../ui/FeedItem';
+import { colors } from '../../styles/colors';
 
-interface ActivityProps {
-
-}
+interface ActivityProps {}
 
 export const Activity: React.FC<ActivityProps> = ({}) => {
+    const [foodEntries, setFoodEntries] = useState([]);
+  
+    useEffect(() => {
+      const fetchFoodEntries = async () => {
+        const foodEntriesCollection = collection(database, 'userChallenges');
+        const foodEntriesSnapshot = await getDocs(foodEntriesCollection);
+        const foodEntriesData = foodEntriesSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setFoodEntries(foodEntriesData);
+      };
+  
+      fetchFoodEntries();
+    }, []);
+  
     return (
-        <View>
-            <Text>
-                WIP: ACTIVITY SCREEN
-            </Text>
-        </View>
+      <View style={styles.container}>
+        <ScrollView style={{ marginBottom: 1 }}>
+          {foodEntries.map((foodEntry) => (
+            <View key={foodEntry.id}>
+              {foodEntry.imageUrls.map((photoUrl, index) => (
+                <FeedItem
+                  key={`${foodEntry.id}_${index}`}
+                  photoUrl={photoUrl}
+                  metricValue={foodEntry.metric}
+                  progressLog={foodEntry.progress[index]}
+                  descriptionLog={foodEntry.description[index]}
+                  dateLog={foodEntry.date[index]}
+                />
+              ))}
+            </View>
+          ))}
+        </ScrollView>
+      </View>
     );
-}
+  }
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.darkGray,
+    },
+  });

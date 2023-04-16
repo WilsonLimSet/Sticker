@@ -70,7 +70,7 @@ export const Challenge: React.FC<ChallengeProps> = ({ navigation, route }) => {
     }
     return (
         <View style={styles.container}>
-            <ScrollView style={{ marginBottom: 100 }}>
+            <ScrollView style={{ marginBottom: 1 }}>
                 <TouchableOpacity
                     style={styles.logProgressButton}
                     onPress={() =>
@@ -82,11 +82,7 @@ export const Challenge: React.FC<ChallengeProps> = ({ navigation, route }) => {
                     
                     <Text style={styles.logProgressText}>Log Progress</Text>
                 </TouchableOpacity>
-            {photoUrls && photoUrls.length > 0 && (
-                console.log("photoUrls: ", photoUrls),
-                console.log("photoUrls.length: ", photoUrls.length),
-                console.log("description",descriptionLog[0])
-            )}
+           
              {
   photoUrls && photoUrls.length > 0 ? (
     photoUrls
@@ -103,21 +99,21 @@ export const Challenge: React.FC<ChallengeProps> = ({ navigation, route }) => {
             dateLog={dateLog ? dateLog[reversedIndex] : undefined}
           />
         );
-      })
-  ) : (
-    <View
-      style={{
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 20,
-      }}
-    >
-      <Text style={styles.text}>
-        No photos available for this challenge.
-      </Text>
-    </View>
-  )
-}
+            })
+        ) : (
+            <View
+            style={{
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 20,
+            }}
+            >
+            <Text style={styles.text}>
+                No photos available for this challenge.
+            </Text>
+            </View>
+        )
+        }
 
 
                 <TouchableOpacity

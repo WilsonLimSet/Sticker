@@ -3,7 +3,7 @@ import React from "react";
 import { View, ScrollView, Text, StyleSheet, Image } from "react-native";
 import { colors } from "../styles/colors";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
-import { formatDistance, parseISO } from "date-fns";
+import {  isValid,formatDistance, parseISO } from "date-fns";
 
 interface FeedItemProps {
   photoUrl?: string;
@@ -23,7 +23,14 @@ export const FeedItem: React.FC<FeedItemProps> = ({
     const authh = getAuth();
     const user = authh?.currentUser;
     const profileImageUrl = user?.photoURL;
-   
+    let realdateLog = "Invalid date format";
+    if (isValid(parseISO(dateLog))) {
+        realdateLog = formatDistance(parseISO(dateLog), new Date(), { addSuffix: true });
+        console.log(realdateLog);
+    } else {
+        //console.error('Invalid date format');
+    }
+
 
     return (
         <View style={styles.container}>
@@ -35,7 +42,7 @@ export const FeedItem: React.FC<FeedItemProps> = ({
                     />
                     <View>
                         <Text style={styles.text}>
-                            {authh?.currentUser?.displayName} - {dateLog}{" "}
+                            {authh?.currentUser?.displayName} - {realdateLog}{" "}
                         </Text>
                         <Text style={{ color: "white", fontSize: 10 }}>
                             {progressLog ?? ""} {metricValue ?? ""} - {descriptionLog ?? ""}
@@ -49,7 +56,7 @@ export const FeedItem: React.FC<FeedItemProps> = ({
                     />
                 </View>
                 <View style={styles.subContainer}>
-                    <ScrollView horizontal={true}>
+                    <ScrollView horizontal={true} scrollEnabled={false}>
                         <View style={styles.imageContainer}>
                             <View style={styles.imgContainer}>
                                 <Image
@@ -70,15 +77,15 @@ const styles = StyleSheet.create({
         backgroundColor: colors.darkGray,
     },
     subContainer: {
-        marginTop: "5%",
-        paddingLeft: 18,
+        marginTop: "0.1%",
+        paddingLeft: 0,
         alignItems: "center",
     },
     imageContainer: {
         flexDirection: "row",
         flexWrap: "wrap",
-        paddingTop: 10,
-        paddingBottom: 10,
+        paddingTop: 0.1,
+        paddingBottom: 0.1,
         alignItems: "center",
         justifyContent: "center",
     },
@@ -108,10 +115,10 @@ const styles = StyleSheet.create({
         marginBottom: "1%",
     },
     sectionIcon: {
-        marginRight: "4.5%",
+        marginRight: "0.5%",
     },
     arrowIcon: {
-        marginRight: 25,
+        marginRight: 5,
         marginLeft: "auto",
     },
     text: {
@@ -120,7 +127,7 @@ const styles = StyleSheet.create({
         marginBottom: 3,
     },
     activityFeed: {
-        marginTop: 15,
+        marginTop: 10,
         flex: 1,
     },
     profile: {
@@ -128,6 +135,7 @@ const styles = StyleSheet.create({
         height: 28,
         borderRadius: 50,
         marginRight: 10,
+        marginLeft: 5
     },
     profileBar: {
         flexDirection: "row",
@@ -142,8 +150,8 @@ const styles = StyleSheet.create({
         marginTop: "auto",
     },
     imageContainer: {
-        width: 235,
-        height: 235,
+        width: 390,
+        height: 435,
         overflow: "hidden",
         borderRadius: 10,
         // flexBasis: "auto",
