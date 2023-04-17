@@ -37,16 +37,14 @@ const metricItems = [
     { label: "Custom", value: "custom" },
     { label: "Hours", value: "hours" },
 ];
-
-const durationItems = [
-    { label: "7", value: "7" },
-    { label: "14", value: "14" },
-    { label: "30", value: "30" },
-    { label: "100", value: "100" },
-];
-
 export const Create: React.FC<CreateProps> = ({ navigation }) => {
+    
+    const [endDate, setEndDate] = useState(null);
+    const minDate = new Date();
+    const maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() + 100);
     const user = auth.currentUser;
+    
 
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
@@ -57,9 +55,10 @@ export const Create: React.FC<CreateProps> = ({ navigation }) => {
     // Drop Down Picker open state
     const [open1, setOpen1] = useState(false);
     const [open2, setOpen2] = useState(false);
+    const [startDate, setStartDate] = useState(new Date());
 
     const onSend = async () => {
-        if (title === "" || desc === "" || metric === "" || duration === "") {
+        if (title === "" || desc === "" || metric === "" ||endDate == null ) {
             Alert.alert("Please fill out all fields");
         } else {
             const challengeObj = {
@@ -69,7 +68,8 @@ export const Create: React.FC<CreateProps> = ({ navigation }) => {
                 metric: metric === "custom" ? customMetric : metric,
                 friends: [user?.uid],
                 custom: metric === "custom" ? true : false,
-                createdAt: new Date(),
+                startDate: new Date(),
+                endDate: endDate.toDate(),
             };
 
             console.log(challengeObj);
@@ -85,6 +85,7 @@ export const Create: React.FC<CreateProps> = ({ navigation }) => {
                     setMetric("");
                     setCustomMetric("");
                     setDuration("");
+                    setEndDate(null);
                     navigation.navigate("Share", { code: shareCode });
                 }
             );
@@ -159,31 +160,61 @@ export const Create: React.FC<CreateProps> = ({ navigation }) => {
                 </View>
             )}
 
-            <View style={{ zIndex: -5 }}>
-                <View style={styles.section}>
-                    <View style={styles.iconTitle}>
-                        <MaterialCommunityIcons
-                            style={styles.sectionIcon}
-                            name="calendar-clock-outline"
-                            color="white"
-                            size={18}
-                        />
-                        <Text style={styles.sectionTitle}>Duration</Text>
-                    </View>
-                    <View>
-                       
-                            
-                        
-                    </View>
-                </View>
+<View style={styles.section}>
+    <View style={styles.iconTitle}>
+        <MaterialCommunityIcons
+            style={styles.sectionIcon}
+            name="calendar-clock-outline"
+            color="white"
+            size={18}
+        />
+        <Text style={styles.sectionTitle}>Duration</Text>
+    </View>
+    <TouchableOpacity
+     onPress={() => setOpen2(!open2)}
+    style={styles.selectDateButton}
+>
+    <Text style={styles.selectDateText}>Select Date</Text>
+</TouchableOpacity>
 
-                <View style={styles.beginChallengeButton}>
-                    <TouchableOpacity onPress={onSend}>
-                        <Text>Create Challenge</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+    
+   
+
+    {/* Render the calendar if Duration dropdown is open */}
+    {open2 && (
+        <View style={{ backgroundColor: 'white' }}>
+            <CalendarPicker 
+  startFromMonday={true}
+  allowRangeSelection={true}
+  minDate={minDate}
+  maxDate={maxDate}
+  selectedStartDate={startDate} // set selectedStartDate to startDate state
+  selectedEndDate={endDate}
+  onDateChange={(date, type) => {
+    if (type === "END_DATE") {
+      setEndDate(date);
+    } else {
+      setStartDate(date);
+      setEndDate(null);
+    }
+  }}
+  textStyle={{
+    fontFamily: "System",
+    color: "black",
+  }}
+  style={{ backgroundColor: "white" }}
+/>
+
         </View>
+    )}
+</View>
+
+<TouchableOpacity style={styles.beginChallengeButton} onPress={onSend}>
+    <Text style={styles.beginChallengeText}>Create Challenge</Text>
+</TouchableOpacity>
+
+            </View>
+       
     );
 };
 
@@ -199,13 +230,14 @@ const styles = StyleSheet.create({
     },
     naming: {
         backgroundColor: "white",
-        height: 264,
+        height: 180,
         borderBottomLeftRadius: 40,
         borderBottomRightRadius: 40,
-        justifyContent: "flex-end",
+        justifyContent: "center",
         paddingLeft: 16,
         marginBottom: 21,
-    },
+      },
+      
     title: {
         fontSize: 24,
         fontWeight: "600",
@@ -285,6 +317,20 @@ const styles = StyleSheet.create({
         marginRight: 60,
         marginLeft: 60,
         marginTop: 23,
+    },
+    selectDateButton: {
+        paddingHorizontal: 15,
+        backgroundColor: "white",
+        height: 46,
+        borderRadius: 7,
+        justifyContent: "center",
+        alignItems: "center",
+
+    },
+    selectDateText: {
+        color: "black",
+        fontSize: 16,
+        
     },
 
     beginChallengeText: {
