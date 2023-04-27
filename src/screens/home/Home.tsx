@@ -16,6 +16,7 @@ import { Created } from "./Created";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { HomeParamList } from "../../navigation/app-nav/HomeParamList";
+import { Sample } from "../../screens/explore/Sample";
 
 interface HomeProps {
     navigation: StackNavigationProp<HomeParamList, "Home">;
@@ -24,13 +25,16 @@ interface HomeProps {
 
 export const Home: React.FC<HomeProps> = ({ navigation }) => {
     const dispatch = useDispatch();
-    const [challenges, setChallenges] = useState([]);
+    const [challenges, setChallenges] = useState<Challenge[]>([]);
     const [isEnabled, setIsEnabled] = useState(true);
-    const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+    const toggleSwitch = () =>
+      setIsEnabled((previousState) => !previousState);
     const auth = getAuth();
     const user = auth.currentUser;
     const profileImageUrl = user!.photoURL;
+    const [samples, setSamples] = useState<Challenge[]>([]);
 
+  
     useEffect(() => {
         const collectionRef = collection(database, "userChallenges");
         const q = query(
@@ -49,29 +53,31 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
         });
         return unsubscribe;
     }, []);
-
-    const handleNavigation = (id) => {
-        dispatch(setChallengeId(id));
-        console.log(id);
-        navigation.navigate("ViewChallenge", { id });
+    
+  
+    const handleNavigation = (id: string) => {
+      dispatch(setChallengeId(id));
+      console.log(id);
+      navigation.navigate("ViewChallenge", { id });
     };
-
+  
     return (
-        <View style={styles.container}>
-            <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-                <View style={styles.row}>
-                    {challenges.map((challenge) => (
-                        <Created
-                            key={challenge.id}
-                            {...challenge}
-                            handleNavigation={handleNavigation}
-                        />
-                    ))}
-                </View>
-            </ScrollView>
-        </View>
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+          <View style={styles.row}>
+            {challenges.map((challenge) => (
+              <Created
+                key={challenge.id}
+                {...challenge}
+                handleNavigation={handleNavigation}
+              />
+            ))}
+          </View>
+        </ScrollView>
+      </View>
     );
-};
+  };
+  
 
 const styles = StyleSheet.create({
     container: {
