@@ -28,31 +28,10 @@ export const Explore: React.FC<ExploreProps> = ({}) => {
             querySnapshot.docs.map(doc => ({
                 name: doc.data().name,
                 days: doc.data().days,
+                metric: doc.data().metric,
             }))
           );
         });
-    
-        // TODO: NAVIGATION OPTIONS
-        // navigation.setOptions({
-        //     title: "Explore Challenges",
-        //     headerTitleStyle: {
-        //         fontSize: 30,
-        //     },
-        //     headerTitleAlign:'left',
-        //     headerTintColor: "white",
-        //     headerStyle: {
-        //         backgroundColor: colors.darkGray,
-        //         shadowRadius: 0,
-        //         shadowOffset: {
-        //             height: 0,
-        //         },
-        //     },
-        //     headerLeft: () => (
-        //         // <FontAwesome name="bars" size={24} color="white" style={{marginLeft: 15}}/>
-        //         null
-        //     ),
-        // });
-
         return unsubscribe;
     }, []);
 
