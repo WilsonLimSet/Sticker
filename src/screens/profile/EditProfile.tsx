@@ -13,27 +13,32 @@ import {
 } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import uuid from "uuid";
-import {
-    getDownloadURL,
-    ref,
-    uploadBytes,
-    getStorage,
-    deleteObject,
-} from "firebase/storage";
+import { storage } from "../../api/firebase";
+
+import { getDownloadURL, ref, uploadBytes, deleteObject,getStorage } from "firebase/storage";
+
 import { useSelector } from "react-redux";
 import { getAuth, updateProfile } from "firebase/auth";
-import { manipulateAsync } from "expo-image-manipulator";
+import { manipulateAsync, SaveOptions} from "expo-image-manipulator";
 
-interface EditProfileProps {}
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RouteProp } from "@react-navigation/native";
 
-export const EditProfile: React.FC<EditProfileProps> = ({
-    navigation,
-    route,
-}) => {
-    const [image, setImage] = useState(null);
+
+// Add your StackParamList type definition here
+type StackParamList = {
+    EditProfile: undefined;
+};
+
+type EditProfileProps = {
+    navigation: StackNavigationProp<StackParamList, "EditProfile">;
+    route: RouteProp<StackParamList, "EditProfile">;
+};
+
+export const EditProfile: React.FC<EditProfileProps> = ({ navigation }) => {
+    const [image, setImage] = useState<string | null>(null);
     const [uploading, setUploading] = useState(false);
-    const [imageUrls, setImageUrls] = useState([]);
-    const challengeId = useSelector((state) => state.challenge.challengeId);
+    const challengeId = useSelector((state: any) => state.challenge.challengeId); // Replace 'any' with your state type definition
 
     const maybeRenderUploadingOverlay = () => {
         if (uploading) {
@@ -120,17 +125,17 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         _handleImagePicked(pickerResult);
     };
 
-    const _handleImagePicked = async (pickerResult) => {
+    const _handleImagePicked = async (pickerResult: ImagePicker.ImagePickerResult) => {
         try {
             setUploading(true);
 
-            if (!pickerResult.canceled) {
+            if (!pickerResult.cancelled) {
                 const asset = pickerResult.assets[0];
                 // compress the image
                 const compressedImage = await manipulateAsync(
                     asset.uri,
                     [{ resize: { width: 720 } }],
-                    { compress: 0.25, format: "jpeg" }
+                    { compress: 0.25, format: "jpeg" } as SaveOptions
                 );
                 const uploadUrl = await uploadImageAsync(compressedImage.uri);
 
@@ -156,6 +161,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             }
         } catch (e) {
             console.log(e);
+            console.log("Please");
             alert("Upload failed, sorry :(");
         } finally {
             setUploading(false);
@@ -206,8 +212,8 @@ async function uploadImageAsync(uri) {
         xhr.open("GET", uri, true);
         xhr.send(null);
     });
-    const filename = uuid.v4();
-
+    const user = getAuth().currentUser;
+    const filename = user.uid;
     const fileRef = ref(getStorage(), `profilepics/${filename}`);
     const result = await uploadBytes(fileRef, blob);
 
@@ -215,3 +221,4 @@ async function uploadImageAsync(uri) {
     blob.close();
     return await getDownloadURL(fileRef);
 }
+
