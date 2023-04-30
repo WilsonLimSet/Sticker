@@ -12,7 +12,6 @@ import {
     Alert,
 } from "react-native";
 import * as Clipboard from "expo-clipboard";
-import uuid from "uuid";
 import { storage } from "../../api/firebase";
 
 import { getDownloadURL, ref, uploadBytes, deleteObject,getStorage } from "firebase/storage";
@@ -128,45 +127,44 @@ export const EditProfile: React.FC<EditProfileProps> = ({ navigation }) => {
     const _handleImagePicked = async (pickerResult: ImagePicker.ImagePickerResult) => {
         try {
             setUploading(true);
-
-            if (!pickerResult.cancelled) {
+            
+            if (!pickerResult.canceled) {
                 const asset = pickerResult.assets[0];
-                // compress the image
+                
+                // Compress the image
                 const compressedImage = await manipulateAsync(
                     asset.uri,
                     [{ resize: { width: 720 } }],
                     { compress: 0.25, format: "jpeg" } as SaveOptions
                 );
-                const uploadUrl = await uploadImageAsync(compressedImage.uri);
-
-                // Update user profile picture
-                const user = getAuth().currentUser;
+               
+                
+                // Get the file reference for the previous profile picture
+                const auth = getAuth();
+                const user = auth.currentUser;
                 const prevProfilePicUrl = user.photoURL;
-                if (prevProfilePicUrl) {
-                    const storageRef = ref(storage, prevProfilePicUrl);
-                    // Delete the file
-                    deleteObject(storageRef)
-                        .then(() => {
-                            // File deleted successfully
-                        })
-                        .catch((error) => {
-                            // Uh-oh, an error occurred!
-                        });
-                }
-
+                const prevProfilePicRef = ref(storage, prevProfilePicUrl);
+                
+                // Upload the compressed image to Firebase Storage with the same reference as the previous picture
+                await uploadBytes(prevProfilePicRef, compressedImage.uri);
+    
+                // Update user profile picture with the download URL of the new picture
+                const uploadUrl = await uploadImageAsync(compressedImage.uri);
                 await updateProfile(user, { photoURL: uploadUrl });
+                
                 setImage(uploadUrl);
                 Alert.alert("Success", "Picture saved! 🎉");
                 navigation.navigate("EditProfile");
             }
         } catch (e) {
             console.log(e);
-            console.log("Please");
             alert("Upload failed, sorry :(");
         } finally {
             setUploading(false);
         }
     };
+    
+    
 
     return (
         <View
