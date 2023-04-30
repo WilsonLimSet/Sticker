@@ -17,7 +17,7 @@ interface ProfileProps {}
 export const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     console.log(auth.currentUser);
     const user = auth.currentUser;
-    const profileImageUrl = user!.photoURL;
+    const profileImageUrl = user.photoURL;
     const onSignOut = () => {
         signOut(auth).catch((error) =>
             console.log("Error logging out: ", error)
