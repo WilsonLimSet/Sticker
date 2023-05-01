@@ -143,18 +143,36 @@ export const EditProfile: React.FC<EditProfileProps> = ({ navigation }) => {
                 const auth = getAuth();
                 const user = auth.currentUser;
                 const prevProfilePicUrl = user.photoURL;
-                const prevProfilePicRef = ref(storage, prevProfilePicUrl);
+                if (prevProfilePicUrl == 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'){
+                    console.log("No previous profile picture");
+                    // Upload the new profile picture to Firebase Storage
+                    const filename = user.uid;
+                    const fileRef = ref(getStorage(), `profilepics/${filename}`);
+                    await uploadBytes(fileRef, compressedImage.uri);
+                    const uploadUrl = await uploadImageAsync(compressedImage.uri);
+
+                    // Update the user's profile picture URL
+                    await updateProfile(user, { photoURL: uploadUrl });
+
+                    // Set the uploaded image URL to the state and display an alert message
+                    setImage(uploadUrl);
+                    Alert.alert('Success', 'Picture saved! 🎉');
+
+                    navigation.navigate('EditProfile');
+                }
+                else{
+                    const prevProfilePicRef = ref(storage, prevProfilePicUrl);
+                    await uploadBytes(prevProfilePicRef, compressedImage.uri);
+                    const uploadUrl = await uploadImageAsync(compressedImage.uri);
+                    await updateProfile(user, { photoURL: uploadUrl });
+                    setImage(uploadUrl);
+                    Alert.alert("Success", "Picture saved! 🎉");
                 
-                // Upload the compressed image to Firebase Storage with the same reference as the previous picture
-                await uploadBytes(prevProfilePicRef, compressedImage.uri);
-    
-                // Update user profile picture with the download URL of the new picture
-                const uploadUrl = await uploadImageAsync(compressedImage.uri);
-                await updateProfile(user, { photoURL: uploadUrl });
-                
-                setImage(uploadUrl);
-                Alert.alert("Success", "Picture saved! 🎉");
-                navigation.navigate("EditProfile");
+                    console.log("prevProfilePicRef: ", prevProfilePicUrl);
+                    navigation.navigate("EditProfile");
+
+                }
+               
             }
         } catch (e) {
             console.log(e);
@@ -164,8 +182,6 @@ export const EditProfile: React.FC<EditProfileProps> = ({ navigation }) => {
         }
     };
     
-    
-
     return (
         <View
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}

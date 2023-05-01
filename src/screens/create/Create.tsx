@@ -45,6 +45,9 @@ export const Create: React.FC<CreateProps> = ({ navigation }) => {
     const maxDayOfMonth = minDate.getDate() + 100;
     const maxDate = new Date(minDate.getFullYear(), minDate.getMonth(), maxDayOfMonth);
     const user = auth.currentUser;
+    const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null);
+const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
+
     
 
     const [title, setTitle] = useState("");
