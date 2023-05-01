@@ -39,10 +39,11 @@ const metricItems = [
 ];
 export const Create: React.FC<CreateProps> = ({ navigation }) => {
     
-    const [endDate, setEndDate] = useState(null);
+    const [endDate, setEndDate] = useState<Date | null>(null);
+
     const minDate = new Date();
-    const maxDate = new Date();
-    maxDate.setDate(maxDate.getDate() + 100);
+    const maxDayOfMonth = minDate.getDate() + 100;
+    const maxDate = new Date(minDate.getFullYear(), minDate.getMonth(), maxDayOfMonth);
     const user = auth.currentUser;
     
 
@@ -50,7 +51,7 @@ export const Create: React.FC<CreateProps> = ({ navigation }) => {
     const [desc, setDesc] = useState("");
     const [metric, setMetric] = useState("");
     const [customMetric, setCustomMetric] = useState("");
-    const [duration, setDuration] = useState("");
+
 
     // Drop Down Picker open state
     const [open1, setOpen1] = useState(false);
@@ -64,12 +65,11 @@ export const Create: React.FC<CreateProps> = ({ navigation }) => {
             const challengeObj = {
                 name: title,
                 description: desc,
-                duration: parseInt(duration),
                 metric: metric === "custom" ? customMetric : metric,
                 friends: [user?.uid],
                 custom: metric === "custom" ? true : false,
                 startDate: new Date(),
-                endDate: endDate.toDate(),
+                endDate: endDate,
             };
 
             console.log(challengeObj);
@@ -84,7 +84,6 @@ export const Create: React.FC<CreateProps> = ({ navigation }) => {
                     setDesc("");
                     setMetric("");
                     setCustomMetric("");
-                    setDuration("");
                     setEndDate(null);
                     navigation.navigate("Share", { code: shareCode });
                 }
@@ -161,24 +160,24 @@ export const Create: React.FC<CreateProps> = ({ navigation }) => {
             )}
 
 <View style={styles.section}>
-    <View style={styles.iconTitle}>
-        <MaterialCommunityIcons
-            style={styles.sectionIcon}
-            name="calendar-clock-outline"
-            color="white"
-            size={18}
-        />
-        <Text style={styles.sectionTitle}>Duration</Text>
-    </View>
+<View style={[styles.iconTitle, open1 ? styles.hidden : null]}>
+    <MaterialCommunityIcons
+        style={styles.sectionIcon}
+        name="calendar-clock-outline"
+        color="white"
+        size={18}
+    />
+    <Text style={styles.sectionTitle}>Duration</Text>
+</View>
     <TouchableOpacity
      onPress={() => setOpen2(!open2)}
-    style={styles.selectDateButton}
+     style={[
+        styles.selectDateButton,
+        open1 ? styles.hidden : null,
+    ]}
 >
     <Text style={styles.selectDateText}>Select Date</Text>
 </TouchableOpacity>
-
-    
-   
 
     {/* Render the calendar if Duration dropdown is open */}
     {open2 && (
@@ -188,15 +187,20 @@ export const Create: React.FC<CreateProps> = ({ navigation }) => {
   allowRangeSelection={true}
   minDate={minDate}
   maxDate={maxDate}
-  selectedStartDate={startDate} // set selectedStartDate to startDate state
+  maxRangeDuration={100}
   selectedEndDate={endDate}
+
   onDateChange={(date, type) => {
-    if (type === "END_DATE") {
-      setEndDate(date);
-    } else {
-      setStartDate(date);
-      setEndDate(null);
+    const selectedDate = new Date(date);
+    if (selectedDate < minDate) {
+      return;
     }
+    setEndDate(selectedDate);
+    
+  }}
+  dayStyle={{
+    borderWidth: 1,
+    borderColor: "#7300e6",
   }}
   textStyle={{
     fontFamily: "System",
@@ -208,8 +212,23 @@ export const Create: React.FC<CreateProps> = ({ navigation }) => {
         </View>
     )}
 </View>
+<Text style={styles.selectedDatesText}>
+  {endDate 
+    ? `Dates of Challenge: ${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`
+    : startDate 
+      ? `Selected Start Date: ${startDate.toLocaleDateString()}` 
+      : "No dates selected"
+  }
+</Text>
 
-<TouchableOpacity style={styles.beginChallengeButton} onPress={onSend}>
+
+<TouchableOpacity
+    style={[
+        styles.beginChallengeButton,
+        open1 ? styles.hidden : null,
+    ]}
+    onPress={onSend}
+>
     <Text style={styles.beginChallengeText}>Create Challenge</Text>
 </TouchableOpacity>
 
@@ -223,6 +242,13 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.darkGray,
     },
+    selectedDatesText: {
+        color: "white",
+        fontSize: 16,
+        textAlign: "center",
+        marginTop: 10,
+    },
+    
     row: {
         display: "flex",
         flexDirection: "row-reverse",
@@ -230,12 +256,12 @@ const styles = StyleSheet.create({
     },
     naming: {
         backgroundColor: "white",
-        height: 180,
+        height: 160,
         borderBottomLeftRadius: 40,
         borderBottomRightRadius: 40,
         justifyContent: "center",
         paddingLeft: 16,
-        marginBottom: 21,
+        marginBottom: 11,
       },
       
     title: {
@@ -341,4 +367,8 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10,
     },
+    hidden: {
+        display: "none",
+    },
+    
 });
