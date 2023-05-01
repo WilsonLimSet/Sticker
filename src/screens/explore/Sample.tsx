@@ -28,7 +28,6 @@ const handleUseTemplate = (templateData: SampleProps) => {
     const challengeObj = {
         name: name,
         description: "",
-        duration: days,
         metric: metric,
         friends: [user?.uid],
         custom: false,

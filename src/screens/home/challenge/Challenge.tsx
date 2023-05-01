@@ -14,6 +14,7 @@ import { FeedItem } from "../../../ui/FeedItem";
 import { HomeParamList } from "../../../navigation/app-nav/HomeParamList";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
+import { isValid, format, parseISO, differenceInDays } from "date-fns";
 
 interface ChallengeProps {
     navigation: StackNavigationProp<HomeParamList, "ViewChallenge">;
@@ -29,6 +30,8 @@ export const Challenge: React.FC<ChallengeProps> = ({ navigation, route }) => {
     const [dateLog, setDate] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [metricValue, setMetricValue] = useState("");
+    const [endDate, setEndDate] = useState("");
+
 
     useEffect(() => {
         const { id } = route.params;
@@ -44,11 +47,9 @@ export const Challenge: React.FC<ChallengeProps> = ({ navigation, route }) => {
                     setPhotoUrls(challengeDoc.data().imageUrls);
                     setProgress(challengeDoc.data().progress);
                     setDescription(challengeDoc.data().description);
-                    setDate(challengeDoc.data().date);
-                    // console.log("Photo URLs: ", challengeDoc.data().imageUrls);
-                    // console.log("Progress: ", challengeDoc.data().progress);
-                    // console.log("Description: ", challengeDoc.data().description);
-                    // console.log("Date: ", challengeDoc.data().date);
+                    setDate(challengeDoc.data().date);   
+                    setEndDate(challengeDoc.data().endDate);
+               
                 } else {
                     console.log("No challenge document found");
                 }
@@ -72,9 +73,38 @@ export const Challenge: React.FC<ChallengeProps> = ({ navigation, route }) => {
             </View>
         );
     }
+    console.log(endDate);
+    const parseDate = (dateValue) => {
+        if (dateValue && dateValue.toDate) {
+          return dateValue.toDate();
+        }
+      
+        return null;
+      };
+      const parsedEndDate = endDate ? parseDate(endDate) : null;
+      const formattedEndDate = parsedEndDate ? format(parsedEndDate, "PPP") : "Invalid Date";
+      const today = new Date();
+      const daysUntilEndDate = parsedEndDate ? differenceInDays(parsedEndDate, today) : null;
+
+      console.log(formattedEndDate);
+
     return (
         <View style={styles.container}>
             <ScrollView style={{ marginBottom: 1 }}>
+            <View
+                        style={{
+                            alignItems: "center",
+                            justifyContent: "center",
+                            padding: 20,
+                        }}
+                    >
+            <Text style={styles.text}>Challenge Ends: {formattedEndDate}</Text>
+            {daysUntilEndDate !== null && (
+                <Text style={styles.text}>
+                    {daysUntilEndDate} Days Left
+                </Text>
+            )}
+                    </View>
                 <TouchableOpacity
                     style={styles.logProgressButton}
                     onPress={() =>
@@ -119,7 +149,7 @@ export const Challenge: React.FC<ChallengeProps> = ({ navigation, route }) => {
                         }}
                     >
                         <Text style={styles.text}>
-                            No photos available for this challenge.
+                            No progress logged yet for this challenge.
                         </Text>
                     </View>
                 )}
